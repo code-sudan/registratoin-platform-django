@@ -1,49 +1,60 @@
 from django.shortcuts import render
-from .models import Register, User
+from django.urls import reverse
+from .models import Register
 from django import forms
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from secrets import randbelow
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+
+USER_PASSWORD = "codesudan"
+
 
 # Create your views here.
 
-
-
-from django.contrib.auth.backends import BaseBackend
-class PhoneModelBackend(BaseBackend):
-    def authenticate(self, request, username=None, password=None):
-        kwargs = {'phone': username}
-
+@login_required
 def index(request):
     return HttpResponse("Hello, world!")
 
-
-
-class new_signup(forms.Form):
+class new_user_form(forms.Form):
     phone_number = forms.CharField(max_length=12, label="رقم تلفونك")
 
-def signup(request):
+def user_reg(request):
     if request.method == "GET":
-        return render(request, "registration/signup.html", {
-            "form": new_signup()
+        return render(request, "registration/user_reg.html", {
+            "form": new_user_form()
         })
-
     elif request.method == "POST":
-        form = new_signup(request.POST)
-        
+        form = new_user_form(request.POST)
+
         if form.is_valid():
             phone_number = form.cleaned_data["phone_number"]
-            pin = randbelow(10)
+            try:
+                user=User.objects.create_user(username=phone_number, password=USER_PASSWORD)
+                user.save()
+            except IntegrityError:
+                return render(request, "registration/user_reg.html", {
+                    "form": form,
+                    "message": "المستخدم موجود لدينا"
+                })
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
 
-            new_user = User.objects.create_user(USERNAME_FIELD=phone_number, pin = pin)
-            new_user.save()
-            return HttpResponse(f"رقمك السري الجديد هو {pin} الرجاء المحافظة عليه لتسجيل الدخول كل مرة")
         else:
-            return render(request, "registration/signup.html", {
-                "form": form
+            return render(request, "registration/user_reg.html", {
+            "form": new_user_form()
             })
-    
+
+def user_logout(request):
+    logout(request)
+    return HttpResponse("you're logged out")
+
+
 
 
 class new_register(forms.Form):
@@ -51,7 +62,7 @@ class new_register(forms.Form):
     register_name = forms.CharField(label="الإسم كاملا ", max_length=64)
     program = forms.CharField(label="ما هو البرنامج الذي إخترته؟ ", max_length=64)
 
-def register(request):
+def program_reg(request):
     if request.method == "GET":
         return render(request, "registration/register.html", {
             "form": new_register()
