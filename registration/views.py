@@ -15,7 +15,7 @@ from .models import Student
 
 USER_PASSWORD = "codesudan"
 
-@login_required(login_url='login/')
+@login_required(login_url="login/")
 def index(request):
     return HttpResponse("This is index, if you see this you're logged in")
 
@@ -40,7 +40,7 @@ def login_view(request):
                     "error_message": "الرجاء إدخال رقم التلفون بالهئة 0912345678"
                 })
             else:
-                student = authenticate(request, username=phone_number, password=USER_PASSWORD)
+                student = authenticate(request, username=phone_number, password=USER_PASSWORD, is_complete=False)
                 if student is not None:
                     login(request, student)
                     return HttpResponse("Now you're logged in")
@@ -87,7 +87,7 @@ def register_student(request):
                     "error_message": " رقم التلفون موجود بالفعل إذهب صفحة تسجيل الدخول"
                 })
             login(request, student)
-            return HttpResponseRedirect(reverse("index/"))
+            return HttpResponseRedirect(reverse("registration:index"))
 
             
 
