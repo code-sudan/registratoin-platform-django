@@ -1,0 +1,18 @@
+{% extends "registration/layout.html" %}
+
+{% block body %}
+    <div class="d-grid gap-3 me-5 mt-5 ms-5">
+        {% if error_message %}
+            <p> {{ error_message }} </p>
+        {% endif %}
+        <h1>المعلومات الأساسية</h1>
+        <form action="{% url 'registration:student_details' %}" method='POST'>
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary">التالي</button>
+            <br>
+            <a href="{% url 'registration:login' %}">تسجل الدخول</a>
+
+        </form>
+    </div>
+{% endblock %}

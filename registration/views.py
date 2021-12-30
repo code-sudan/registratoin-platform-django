@@ -1,13 +1,13 @@
-from django.forms.fields import CharField
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, request
 from secrets import randbelow
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Student
+from .forms import *
 
 # Create your views here.
 
@@ -15,14 +15,8 @@ from .models import Student
 
 USER_PASSWORD = "codesudan"
 
-@login_required(login_url="login/")
-def index(request):
-    return HttpResponse("This is index, if you see this you're logged in")
 
 
-# registration and login form form
-class register_login_form(forms.Form):
-    phone_number = CharField(max_length=12, label="الرجاء إدخال رقم تلفونك", required=True, initial="0912345678")
 
 def login_view(request):
     if request.method == "GET":
@@ -32,7 +26,7 @@ def login_view(request):
     elif request.method == "POST":
         form = register_login_form(request.POST)
         if form.is_valid():
-            phone_number = form.cleaned_data["phone_number"]
+            phone_number = form.cleaned_data["username"]
             phone_number = f"249{phone_number[-9:]}"
             if len(phone_number) < 10:
                 return render(request, "registration/login_student.html", {
@@ -43,31 +37,44 @@ def login_view(request):
                 student = authenticate(request, username=phone_number, password=USER_PASSWORD, is_complete=False)
                 if student is not None:
                     login(request, student)
-                    return HttpResponse("Now you're logged in")
+                    return HttpResponseRedirect(reverse("registration:index"))
                 else:
                     return render(request, "registration/login_student.html", {
                     "form": form,
                     "error_message": "هذا الرقم غير مسجل، الرجاء التسجيل"
                     })
+        else:
+            return render(request, "registration/login_student.html", {
+                "form": form,
+                "error_message": "الرجاء المحاولة مرة أخرى"
+                })
 
-
-
+@login_required(redirect_field_name=None)
+def index(request):
+    if not request.user.is_complete:
+        return HttpResponseRedirect(reverse("registration:student_details"))
+    return HttpResponse("This is index, if you see this you're logged in")
 
 def logout_view(request):
     logout(request)
-    return HttpResponse("You're logged out now")
+    return HttpResponseRedirect(reverse("registration:login"))
 
 def register_student(request):
     # if the request == GET then display the new registration form
     if request.method == "GET":
-        return render(request, "registration/register_student.html", {
+        if request.user.is_authenticated:
+            return render(request, "registration/register_student.html", {
+            "error_message": "أنت مسجل وأتممت عملية الدخول",
+            })
+        else:
+            return render(request, "registration/register_student.html", {
             "form": register_login_form(),
-        })
+            })
     # if the request == POST then check the information 
     elif request.method == "POST":
         new_student = register_login_form(request.POST)
         if new_student.is_valid():
-            phone_number = new_student.cleaned_data["phone_number"]
+            phone_number = new_student.cleaned_data["username"]
 
             # check if the phone number length is more than or equal to 10, if yes, then slice the last 9 numbers, if no send and error
 
@@ -81,7 +88,8 @@ def register_student(request):
             try:
                 student = Student.objects.create_user(username=phone_number, password=USER_PASSWORD)
                 student.save()
-            except IntegrityError:
+            except Exception as e:
+                print(e)
                 return render(request, "registration/register_student.html", {
                     "form": new_student,
                     "error_message": " رقم التلفون موجود بالفعل إذهب صفحة تسجيل الدخول"
@@ -89,10 +97,43 @@ def register_student(request):
             login(request, student)
             return HttpResponseRedirect(reverse("registration:index"))
 
-            
 
-def student_detail(request):
-    pass
+@login_required(redirect_field_name=None)
+def student_details(request):
+    if request.method == "GET":
+        return render(request, "registration/student_details.html", {
+            "form": student_details_from()
+        })
+    elif request.method == "POST":
+        new_student_details = student_details_from(request.POST)
+        if new_student_details.is_valid():
+
+            first_name = new_student_details.cleaned_data["first_name"]
+            father_name = new_student_details.cleaned_data["father_name"]
+            email = new_student_details.cleaned_data["email"]
+            birthday = new_student_details.cleaned_data["birthday"]
+            occupation = new_student_details.cleaned_data["occupation"]
+            university = new_student_details.cleaned_data["university"]
+            specialization = new_student_details.cleaned_data["specialization"]
+            state = new_student_details.cleaned_data["state"]
+            address = new_student_details.cleaned_data["address"]
+
+            try:
+                Student.objects.filter(pk=request.user.pk).update(first_name = first_name, father_name=father_name, email=email, birthday=birthday, occupation=occupation, university=university, specialization=specialization, state=state, address=address)
+                Student.objects.filter(pk=request.user.pk).update(is_complete=True)
+            except:
+                return render(request, "registration/student_details.html",{
+                "form": new_student_details,
+                "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
+                })
+            
+            return HttpResponse("update user DONE")
+        else:
+            return render(request, "registration/student_details.html",{
+                "form": new_student_details,
+                "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
+            })
+
 
 def register_for_program(request):
     pass

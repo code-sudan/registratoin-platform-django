@@ -5,7 +5,7 @@
         {% if error_message %}
             <p> {{ error_message }} </p>
         {% endif %}
-        <h1>التسجيل</h1>
+        <h1>تسجيل الدخول</h1>
         <form action="{% url 'registration:login' %}" method='POST'>
             {% csrf_token %}
             {{ form }}
