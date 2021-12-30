@@ -9,7 +9,7 @@
         <form action="{% url 'registration:student_details' %}" method='POST'>
             {% csrf_token %}
             {{ form }}
-            <button type="submit" class="btn btn-primary">التالي</button>
+            <button type="submit" class="btn btn-primary">التسجيل للبرنامج</button>
             <br>
             <a href="{% url 'registration:login' %}">تسجل الدخول</a>
 

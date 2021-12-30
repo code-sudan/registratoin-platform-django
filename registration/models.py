@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import date
@@ -39,3 +40,13 @@ class Program(models.Model):
     def __str__(self):
         return(self.name_english)
 
+
+class Registration(models.Model):
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    package = models.CharField(max_length=64)
+
+    def __str__(self):
+        return(f"{self.student} registerd for {self.program}")

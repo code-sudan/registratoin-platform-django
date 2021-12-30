@@ -1,6 +1,6 @@
 from django.db.models.base import Model
 from django.forms import ModelForm, fields, widgets
-from .models import Student
+from .models import Registration, Student
 from django import forms
 
 
@@ -8,15 +8,22 @@ from django import forms
 class register_login_form(ModelForm):
     class Meta:
         model=Student
-        fields=["username"]
+        fields=["username", "password"]
         labels={
-            "username": "رقم التلفون"
+            "username": "رقم التلفون",
+            "password": "رقم الأمان",
         }
         help_texts={
-            "username": "الرجاء إدخال رقم تلفونك المكون من 10 أرقام"
+            "username": "الرجاء إدخال رقم تلفونك المكون من 10 أرقام",
+            "password": "إختار رقم بين 0-9 لتسجيل الدخول بأمان في المستقبل"
         }
         widgets={
-            "username": forms.TextInput(attrs={"class": "form-control"})
+            "username": forms.TextInput(attrs={"class": "form-control mb-3"}),
+            "password": forms.PasswordInput(attrs={"class": "form-control mb-3"})
+        }
+        required={
+            "username",
+            "password"
         }
 
 
@@ -62,6 +69,26 @@ class student_details_from(ModelForm):
 
             
 
+        }
+
+
+class new_program_form(ModelForm):
+    class Meta:
+        model=Registration
+        fields = ["program", "package"]
+
+        labels = {
+            "program": "ما هو البرنامج الذي تريد التسجيل فيه",
+            "package": "ما هي النسخة التي تريد التسجيل فيها؟"
+        }
+
+        PACKAGES = [
+            ("basic", "الأساسية"),
+            ("golden", "الذهبية"),
+        ]
+        widgets={
+            "program": forms.Select(attrs={"class": "form-select"}),
+            "package": forms.Select(attrs={"class": "form-selecet"}, choices=PACKAGES)
         }
 
 

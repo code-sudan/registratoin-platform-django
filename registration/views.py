@@ -6,15 +6,10 @@ from secrets import randbelow
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Student
+from .models import Student, Registration
 from .forms import *
 
 # Create your views here.
-
-
-
-USER_PASSWORD = "codesudan"
-
 
 
 
@@ -27,14 +22,15 @@ def login_view(request):
         form = register_login_form(request.POST)
         if form.is_valid():
             phone_number = form.cleaned_data["username"]
+            pin = form.cleaned_data["password"]
             phone_number = f"249{phone_number[-9:]}"
-            if len(phone_number) < 10:
+            if len(phone_number) < 10 or len(pin) != 1 or not pin.isnumeric():
                 return render(request, "registration/login_student.html", {
                     "form": form,
-                    "error_message": "الرجاء إدخال رقم التلفون بالهئة 0912345678"
+                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل"
                 })
             else:
-                student = authenticate(request, username=phone_number, password=USER_PASSWORD, is_complete=False)
+                student = authenticate(request, username=phone_number, password=pin)
                 if student is not None:
                     login(request, student)
                     return HttpResponseRedirect(reverse("registration:index"))
@@ -75,18 +71,19 @@ def register_student(request):
         new_student = register_login_form(request.POST)
         if new_student.is_valid():
             phone_number = new_student.cleaned_data["username"]
+            pin = new_student.cleaned_data["password"]
 
             # check if the phone number length is more than or equal to 10, if yes, then slice the last 9 numbers, if no send and error
 
-            if len(phone_number) < 10:
+            if len(phone_number) < 10 or len(pin) != 1 or not pin.isnumeric():
                 return render(request, "registration/register_student.html", {
                     "form": new_student,
-                    "error_message": "الرجاء إدخال رقم التلفون بصورة صحيحة بهيئة 0912345678"
+                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل"
                 })
             phone_number = f"249{phone_number[-9:]}"
             # try to save the new students to the database
             try:
-                student = Student.objects.create_user(username=phone_number, password=USER_PASSWORD)
+                student = Student.objects.create_user(username=phone_number, password=pin, is_complete = False)
                 student.save()
             except Exception as e:
                 print(e)
@@ -96,7 +93,6 @@ def register_student(request):
                 })
             login(request, student)
             return HttpResponseRedirect(reverse("registration:index"))
-
 
 @login_required(redirect_field_name=None)
 def student_details(request):
@@ -135,5 +131,27 @@ def student_details(request):
             })
 
 
-def register_for_program(request):
-    pass
+def program_registration(request):
+    if request.method == "GET":
+        return render(request, "registration/program_registration.html", {
+            "form": new_program_form()
+        })
+    elif request.method == "POST":
+        new_registration = new_program_form(request.POST)
+        if new_registration.is_valid():
+            program = new_registration.cleaned_data["program"]
+            package = new_registration.cleaned_data["package"]
+            try:
+                Registration.objects.create(student=request.user, program=program, package=package)
+            except:
+                 return render(request, "registration/program_registration.html", {
+                "form": new_registration,
+                "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
+                })
+            return HttpResponseRedirect(reverse("registration:index"))
+
+        else:
+            return render(request, "registration/program_registration.html", {
+                "form": new_registration,
+                "error_message": "الرجاء المحاولة مرة أخرى"
+            })
