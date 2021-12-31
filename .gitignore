@@ -24,6 +24,8 @@ media
 # C extensions
 *.so
 
+#amazon key pair value
+aws key/
 # Distribution / packaging
 .Python
 build/

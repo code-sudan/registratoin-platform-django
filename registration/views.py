@@ -123,14 +123,14 @@ def student_details(request):
                 "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
                 })
             
-            return HttpResponse("update user DONE")
+            return HttpResponseRedirect(reverse("registration:program_registration"))
         else:
             return render(request, "registration/student_details.html",{
                 "form": new_student_details,
                 "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
             })
 
-
+@login_required(redirect_field_name=None)
 def program_registration(request):
     if request.method == "GET":
         return render(request, "registration/program_registration.html", {
@@ -155,3 +155,8 @@ def program_registration(request):
                 "form": new_registration,
                 "error_message": "الرجاء المحاولة مرة أخرى"
             })
+
+
+@login_required(redirect_field_name=None)
+def program_enrollment(request):
+    pass
