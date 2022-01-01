@@ -5,11 +5,11 @@
         {% if error_message %}
             <p> {{ error_message }} </p>
         {% endif %}
-        <h1>التسجيل لبرامج كود_ سودان</h1>
-        <form action="{% url 'registration:program_registration' %}" method='POST'>
+        <h1>إكمال التسجيل لبرامج كود_ سودان</h1>
+        <form action="{% url 'registration:program_enrollment' %}" method='POST'>
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">التالي</button>
+            <button type="submit" class="btn btn-primary">إكمال التسجيل</button>
         </form>
     </div>
 {% endblock %}

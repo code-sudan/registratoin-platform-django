@@ -49,7 +49,7 @@ def login_view(request):
 def index(request):
     if not request.user.is_complete:
         return HttpResponseRedirect(reverse("registration:student_details"))
-    return HttpResponse("This is index, if you see this you're logged in")
+    return HttpResponseRedirect(reverse("registration:program_registration"))
 
 def logout_view(request):
     logout(request)
@@ -93,6 +93,10 @@ def register_student(request):
                 })
             login(request, student)
             return HttpResponseRedirect(reverse("registration:index"))
+        else:
+            return render(request, "registration/register_student.html", {
+            "form": new_student,
+            })
 
 @login_required(redirect_field_name=None)
 def student_details(request):
@@ -141,14 +145,16 @@ def program_registration(request):
         if new_registration.is_valid():
             program = new_registration.cleaned_data["program"]
             package = new_registration.cleaned_data["package"]
+            batch = new_registration.cleaned_data["batch"]
             try:
-                Registration.objects.create(student=request.user, program=program, package=package)
+                registrated = Registration.objects.create(student=request.user, program=program, package=package, batch=batch, is_register=True, is_enroll = False)
             except:
                  return render(request, "registration/program_registration.html", {
                 "form": new_registration,
                 "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
-            return HttpResponseRedirect(reverse("registration:index"))
+            request.session["form_id"] = registrated.id
+            return HttpResponseRedirect(reverse("registration:program_enrollment"))
 
         else:
             return render(request, "registration/program_registration.html", {
@@ -159,4 +165,34 @@ def program_registration(request):
 
 @login_required(redirect_field_name=None)
 def program_enrollment(request):
-    pass
+    if request.method == "GET":
+        try: 
+            enrollment_form = Registration.objects.get(pk=request.session.get("form_id"))
+        except:
+            return HttpResponseRedirect(reverse("registration:program_registration"))
+        if enrollment_form.is_register == False:
+            return HttpResponseRedirect(reverse("registration:program_registration"))
+        elif enrollment_form.is_enroll == True:
+            return HttpResponseRedirect(reverse("registration:index"))
+        else:
+            return render(request, "registration/program_enrollment.html", {
+                "form": new_enrollment_from()
+            })
+        
+    elif request.method == "POST":
+        new_enrollment = new_enrollment_from(request.POST)
+        if new_enrollment.is_valid():
+            transaction_id = new_enrollment.cleaned_data["transaction_id"]
+            try:
+                Registration.objects.filter(pk=request.session.get("form_id")).update(transaction_id = transaction_id, is_enroll = True)
+            except:
+                return render(request, "registration/program_enrollment.html", {
+                "form": new_enrollment
+                })
+            return HttpResponse(f"you transaction id is {transaction_id}")
+            
+        else:
+            return render(request, "registration/program_enrollment.html", {
+            "form": new_enrollment
+            })
+        

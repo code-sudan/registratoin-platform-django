@@ -38,15 +38,28 @@ class Program(models.Model):
     track = models.ForeignKey(Track, on_delete=models.CASCADE)
 
     def __str__(self):
-        return(self.name_english)
+        return(self.name_arabic)
+
+class Batch(models.Model):
+    id=models.AutoField(primary_key=True)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    number = models.IntegerField()
+    started_at = models.DateField()
+
+    def __str__(self):
+        return (f"{self.number}")
 
 
 class Registration(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     package = models.CharField(max_length=64)
+    is_register = models.BooleanField(default=False)
+    transaction_id = models.PositiveBigIntegerField(null=True, default=None)
+    is_enroll = models.BooleanField(default=False)
 
     def __str__(self):
         return(f"{self.student} registerd for {self.program}")

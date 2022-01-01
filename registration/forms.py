@@ -75,11 +75,12 @@ class student_details_from(ModelForm):
 class new_program_form(ModelForm):
     class Meta:
         model=Registration
-        fields = ["program", "package"]
+        fields = ["program", "package", "batch"]
 
         labels = {
             "program": "ما هو البرنامج الذي تريد التسجيل فيه",
-            "package": "ما هي النسخة التي تريد التسجيل فيها؟"
+            "package": "ما هي النسخة التي تريد التسجيل فيها؟",
+            "batch": "ما هي الدفعة التي تريد الانضمام لها؟"
         }
 
         PACKAGES = [
@@ -88,7 +89,28 @@ class new_program_form(ModelForm):
         ]
         widgets={
             "program": forms.Select(attrs={"class": "form-select"}),
-            "package": forms.Select(attrs={"class": "form-selecet"}, choices=PACKAGES)
+            "package": forms.Select(choices=PACKAGES, attrs={"class": "form-selecet"}),
+            "batch": forms.Select(attrs={"class": "form-select"})
+
         }
+        required = (
+            "program",
+            "package",
+            "batch"
+        )
+
+class new_enrollment_from(ModelForm):
+    class Meta:
+        model=Registration
+        fields = ["transaction_id"]
+        labels = {
+            "transaction_id": "الرجاء إدخال رقم العملية:"
+        }
+
+        widgets = {
+            "transaction_id": forms.TextInput(attrs={"class": "form-contrl"})
+        }
+
+
 
 

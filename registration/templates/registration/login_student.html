@@ -8,7 +8,7 @@
         <h1>تسجيل الدخول</h1>
         <form action="{% url 'registration:login' %}" method='POST'>
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
             <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
             <br>
             <a href="{% url 'registration:register_student' %}">التسجيل</a>
