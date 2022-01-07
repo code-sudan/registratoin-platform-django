@@ -4,7 +4,6 @@ on:
   push:
     branches: [ master ]
 
-
 jobs:
   build:
 
@@ -12,11 +11,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Deploy Djnago
+      uses: actions/deploy-django@v2
       with:
-        token: '${{ secrets.TOKEN_GITHUB }}'
-    - run:
-        sudo git pull origin master
-        python3 manage.py makemigrations
-        python3 manage.py migrate
-        python3 manage.py collectstatic
-        sudo service apache2 restart
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID  }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
+        aws-region: us-east-2
+        instance-ids: ${{ secrets.INSTANCE_ID  }}
+        comment: Deploy the master branch
+        working-directory: /home/ubuntu/codesudan
+        command: /bin/sh ./deploy.sh
+
+
