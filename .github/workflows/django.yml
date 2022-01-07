@@ -13,10 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        global: true
-        name: 'Ahmed Ali'
-        email: 'ahmed.elsir.khalfalla@gmail.com'
-        actor: 'aelsir'
         token: '${{ secrets.TOKEN_GITHUB }}'
     - run:
         sudo git pull origin master
