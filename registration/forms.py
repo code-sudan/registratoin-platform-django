@@ -18,8 +18,8 @@ class register_login_form(ModelForm):
             "password": "إختار رقم بين 0-9 لتسجيل الدخول بأمان في المستقبل"
         }
         widgets={
-            "username": forms.TextInput(attrs={"class": "form-control mb-3"}),
-            "password": forms.PasswordInput(attrs={"class": "form-control mb-3"})
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "password": forms.PasswordInput(attrs={"class": "form-control"})
         }
         required={
             "username",
@@ -46,6 +46,13 @@ class student_details_from(ModelForm):
         required = (
             "first_name",
             "father_name",
+            "email",
+            "gender",
+            "birthday",
+            "occupation",
+            "university",
+            "specialization",
+            "state",
         )
         widgets = {
             
@@ -53,14 +60,7 @@ class student_details_from(ModelForm):
             "father_name": forms.TextInput(attrs={"class": "form-control", "required": True}),
             "email": forms.EmailInput(attrs={"class": "form-control", "required": True}),
             "gender": forms.Select(attrs={"class": "form-select", "required": True}),
-            "birthday": forms.SelectDateWidget(
-                months = {
-                    1:('يناير'), 2:('فبراير'), 3:('مارس'), 4:('أبريل'),
-                    5:('مايو'), 6:('يونيو'), 7:('يوليو'), 8:('أغسطس'),
-                    9:('سبتمبر'), 10:('أكتوير'), 11:('نوفمبر'), 12:('ديسمبر')
-                    }, 
-                attrs={"class": "form-control", "required": True}
-            ),
+            "birthday": forms.DateInput(attrs={"type": "date"}),
             "occupation": forms.TextInput(attrs={"class": "form-control", "required": True}),
             "university": forms.TextInput(attrs={"class": "form-control", "required": True}), 
             "specialization": forms.TextInput(attrs={"class": "form-control", "required": True}), 

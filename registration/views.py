@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect, request
-from secrets import randbelow
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -48,7 +47,7 @@ def login_view(request):
 @login_required(redirect_field_name=None)
 def index(request):
     if not request.user.is_complete:
-        return HttpResponseRedirect(reverse("registration:student_details"))
+        return HttpResponseRedirect(reverse("registration:student_details")) 
     return HttpResponseRedirect(reverse("registration:program_registration"))
 
 def logout_view(request):
@@ -57,6 +56,7 @@ def logout_view(request):
 
 def register_student(request):
     # if the request == GET then display the new registration form
+    
     if request.method == "GET":
         if request.user.is_authenticated:
             return render(request, "registration/register_student.html", {
@@ -74,7 +74,12 @@ def register_student(request):
             pin = new_student.cleaned_data["password"]
 
             # check if the phone number length is more than or equal to 10, if yes, then slice the last 9 numbers, if no send and error
-
+            # check if the pin number isn't numaric or isn't a one number.
+            if len(pin) != 1 or not pin.isnumeric():
+                return render(request, "registration/register_student.html", {
+                    "form": new_student,
+                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل"
+                })
             if len(phone_number) < 10 or len(pin) != 1 or not pin.isnumeric():
                 return render(request, "registration/register_student.html", {
                     "form": new_student,
@@ -101,16 +106,18 @@ def register_student(request):
 @login_required(redirect_field_name=None)
 def student_details(request):
     if request.method == "GET":
+        if request.user.is_authenticated:
+            student_details = student_details_from()
         return render(request, "registration/student_details.html", {
             "form": student_details_from()
         })
     elif request.method == "POST":
         new_student_details = student_details_from(request.POST)
         if new_student_details.is_valid():
-
             first_name = new_student_details.cleaned_data["first_name"]
             father_name = new_student_details.cleaned_data["father_name"]
             email = new_student_details.cleaned_data["email"]
+            gender = new_student_details.cleaned_data["gender"]
             birthday = new_student_details.cleaned_data["birthday"]
             occupation = new_student_details.cleaned_data["occupation"]
             university = new_student_details.cleaned_data["university"]
@@ -119,7 +126,7 @@ def student_details(request):
             address = new_student_details.cleaned_data["address"]
 
             try:
-                Student.objects.filter(pk=request.user.pk).update(first_name = first_name, father_name=father_name, email=email, birthday=birthday, occupation=occupation, university=university, specialization=specialization, state=state, address=address)
+                Student.objects.filter(pk=request.user.pk).update(first_name = first_name, father_name=father_name, email=email, gender = gender, birthday=birthday, occupation=occupation, university=university, specialization=specialization, state=state, address=address)
                 Student.objects.filter(pk=request.user.pk).update(is_complete=True)
             except:
                 return render(request, "registration/student_details.html",{
@@ -161,7 +168,6 @@ def program_registration(request):
                 "form": new_registration,
                 "error_message": "الرجاء المحاولة مرة أخرى"
             })
-
 
 @login_required(redirect_field_name=None)
 def program_enrollment(request):
