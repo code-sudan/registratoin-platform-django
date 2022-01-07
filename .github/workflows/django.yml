@@ -12,15 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Configure AWS credentials
-      uses: actions/deploy-django@v2
+    - name: GitHub CI/CD
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID  }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
-        aws-region: us-east-2
-        instance-ids: ${{ secrets.INSTANCE_ID  }}
-        comment: configure the AWS credentials
-        working-directory: /home/ubuntu/codesudan
+        global: true
+        name: 'Ahmed Ali'
+        email: 'ahmed.elsir.khalfalla@gmail.com'
+        actor: 'aelsir'
+        token: '${{ secrets.TOKEN_GITHUB }}'
     - name: Deploy Django
       run:
         sudo git pull origin master
