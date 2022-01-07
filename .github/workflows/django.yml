@@ -14,13 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Deploy Djnago
-      uses: actions/setup-python@v2
+      uses: actions/deploy-django@v2
       with:
-        python-version: ${{ matrix.python-version }}
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID  }}
-	aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
-	aws-region: us-east-2
-	instance-ids: ${{ secrets.INSTANCE_ID  }}
-	comment: Deploy the master branch
-	working-directory: /home/ubuntu/codesudan
-  	command: /bin/sh ./deploy.sh
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
+        aws-region: us-east-2
+        instance-ids: ${{ secrets.INSTANCE_ID  }}
+        comment: Deploy the master branch
+        working-directory: /home/ubuntu/codesudan
+        command: /bin/sh ./deploy.sh
