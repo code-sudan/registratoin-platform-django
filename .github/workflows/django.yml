@@ -11,13 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: GitHub CI/CD
       with:
+        global: true
+        name: 'Ahmed Ali'
+        email: 'ahmed.elsir.khalfalla@gmail.com'
+        actor: 'aelsir'
         token: '${{ secrets.TOKEN_GITHUB }}'
-      - run:
+    - name: Deploy Django
+    - run:
         sudo git pull origin master
         python3 manage.py makemigrations
         python3 manage.py migrate
         python3 manage.py collectstatic
         sudo service apache2 restart
-
