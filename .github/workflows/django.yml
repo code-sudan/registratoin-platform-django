@@ -12,14 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: GitHub CI/CD
       with:
         global: true
         name: 'Ahmed Ali'
         email: 'ahmed.elsir.khalfalla@gmail.com'
         actor: 'aelsir'
         token: '${{ secrets.TOKEN_GITHUB }}'
-    - name: Deploy Django
     - run:
         sudo git pull origin master
         python3 manage.py makemigrations
