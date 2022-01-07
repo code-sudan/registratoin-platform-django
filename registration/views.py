@@ -10,7 +10,6 @@ from .forms import *
 
 # Create your views here.
 
-# update yml
 
 def login_view(request):
     if request.method == "GET":
