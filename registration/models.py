@@ -25,17 +25,18 @@ class Student(AbstractUser):
 
 class Track(models.Model):
     id = models.AutoField(primary_key=True)
-    name_english = models.CharField(max_length=64, null = False, default="old")
-    name_arabic = models.CharField(max_length=64, null = False, default="قديم")
+    name_english = models.CharField(max_length=64, null = False)
+    name_arabic = models.CharField(max_length=64, null = False)
 
     def __str__(self):
         return(self.name_english)
 
 class Program(models.Model):
     id = models.AutoField(primary_key=True)
-    name_english = models.CharField(max_length=64, null=False, default="old")
-    name_arabic = models.CharField(max_length=64, null = False, default="قديم")
+    name_english = models.CharField(max_length=64, null=False)
+    name_arabic = models.CharField(max_length=64, null = False)
     track = models.ForeignKey(Track, on_delete=models.CASCADE)
+    code = models.CharField(max_length=4)
 
     def __str__(self):
         return(self.name_arabic)

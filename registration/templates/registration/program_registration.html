@@ -9,7 +9,7 @@
         <form action="{% url 'registration:program_registration' %}" method='POST'>
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">التالي</button>
+            <button type="submit" class="btn btn-primary">تفاصيل البرنامج</button>
         </form>
     </div>
 {% endblock %}

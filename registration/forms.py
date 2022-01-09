@@ -99,6 +99,7 @@ class new_program_form(ModelForm):
             "batch"
         )
 
+
 class new_enrollment_from(ModelForm):
     class Meta:
         model=Registration

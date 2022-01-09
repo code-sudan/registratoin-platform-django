@@ -14,7 +14,8 @@ from .forms import *
 def login_view(request):
     if request.method == "GET":
         return render(request, "registration/login_student.html", {
-            "form": register_login_form()
+            "form": register_login_form(),
+            "progress": 0,
         })
     elif request.method == "POST":
         form = register_login_form(request.POST)
@@ -64,6 +65,7 @@ def register_student(request):
         else:
             return render(request, "registration/register_student.html", {
             "form": register_login_form(),
+            "progress": 0,
             })
     # if the request == POST then check the information 
     elif request.method == "POST":
@@ -106,10 +108,30 @@ def register_student(request):
 def student_details(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            student_details = student_details_from()
-        return render(request, "registration/student_details.html", {
-            "form": student_details_from()
-        })
+            student_details_form = student_details_from()
+            
+            user_details = Student.objects.filter(pk=request.user.id)
+
+            student_details_form.initial["first_name"] = user_details[0].first_name
+            student_details_form.initial["father_name"] = user_details[0].father_name
+            student_details_form.initial["email"] = user_details[0].email
+            student_details_form.initial["gender"] = user_details[0].gender
+            student_details_form.initial["birthday"] = user_details[0].birthday
+            student_details_form.initial["occupation"] = user_details[0].occupation
+            student_details_form.initial["university"] = user_details[0].university
+            student_details_form.initial["specialization"] = user_details[0].specialization
+            student_details_form.initial["state"] = user_details[0].state
+            student_details_form.initial["address"] = user_details[0].address
+
+            return render(request, "registration/student_details.html", {
+                "form": student_details_form,
+            })
+
+        else:
+            return render(request, "registration/student_details.html", {
+                "form": student_details_from(),
+                "progress": 20,
+            })
     elif request.method == "POST":
         new_student_details = student_details_from(request.POST)
         if new_student_details.is_valid():
@@ -144,7 +166,8 @@ def student_details(request):
 def program_registration(request):
     if request.method == "GET":
         return render(request, "registration/program_registration.html", {
-            "form": new_program_form()
+            "form": new_program_form(),
+            "progress": 40,
         })
     elif request.method == "POST":
         new_registration = new_program_form(request.POST)
@@ -160,7 +183,15 @@ def program_registration(request):
                 "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
             request.session["form_id"] = registrated.id
-            return HttpResponseRedirect(reverse("registration:program_enrollment"))
+            return render(request, f"registration/programs/{str(program.code).lower()}.html", {
+                "package": package, 
+                "program_name_arabic": str(program.name_arabic),
+                "program_name_english": str(program.name_english),
+                "track_name_arabic": str(program.track.name_arabic),
+                "track_name_english": str(program.track.name_english),
+                "batch": str(batch.started_at),
+                "progress": 40,
+            })
 
         else:
             return render(request, "registration/program_registration.html", {
@@ -181,7 +212,8 @@ def program_enrollment(request):
             return HttpResponseRedirect(reverse("registration:index"))
         else:
             return render(request, "registration/program_enrollment.html", {
-                "form": new_enrollment_from()
+                "form": new_enrollment_from(),
+                "progress": 60,
             })
         
     elif request.method == "POST":
