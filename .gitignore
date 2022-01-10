@@ -46,7 +46,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-static/
+/static/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
