@@ -1,51 +1,61 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-    <head>
-        <title>تسجيل برامج كود_ سودان</title>
-        {% load static %}  
-        <link href="{% static 'css/bootstrap.rtl.min.css' %}" rel="stylesheet">
-  
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    </head>
-    <body>
-        <div class="container-lg">
-            <div>
-                {% if user.is_authenticated %}
-                    أنت مسجل كـ: <strong>{{ user.first_name }}</strong>.
-                {% else %}
-                    غير مسجل
-                {% endif %}
-            </div>
-            <ul class="nav">
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registration:index' %}">الرئيسية</a>
-                </li>
-                {% if user.is_complete %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registration:student_details' %}">تعديل بياناتي</a>
-                </li>
-                {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:logout' %}">تسجيل الخروج</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:login' %}">تسجيل الدخول</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:register_student' %}">التسجيل</a>
-                    </li>
-                {% endif %}
-            </ul>
-            <br>
-            {% if progress %}
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: {{progress}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            {% endif %}
-            {% block body %}
-            {% endblock %}
-        </div>    
-    </body>
+  <head>
+    <title>تسجيل برامج كود_ سودان</title>
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </head>
+  <body>
+    <div class="container-lg">
+      <div>
+        {% if user.is_authenticated %} أنت مسجل كـ:
+        <strong>{{ user.first_name }}</strong>. {% else %} غير مسجل {% endif %}
+      </div>
+      <ul class="nav">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration:index' %}">الرئيسية</a>
+        </li>
+        {% if user.is_complete %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration:student_details' %}"
+            >تعديل بياناتي</a
+          >
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration:logout' %}"
+            >تسجيل الخروج</a
+          >
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration:login' %}"
+            >تسجيل الدخول</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration:register_student' %}"
+            >التسجيل</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+      <br />
+      {% if progress %}
+      <div class="progress">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: {{progress}}%"
+          aria-valuenow="25"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      {% endif %} {% block body %} {% endblock %}
+    </div>
+  </body>
 </html>
