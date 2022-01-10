@@ -1,7 +1,19 @@
 {% extends "registration/layout.html" %}
 
 {% block body %}
+
     <div class="d-grid gap-3 me-5 mt-5 ms-5">
+        <div class="alert alert-primary" role="alert">
+            على حسب النسخة التي قمت بإختيارها قم بدفع رسوم البرنامج {{price}} جنيه على:
+            <br>
+            رقم الحساب: 1626615
+            <br>
+            الإسم: أحمد السر خلف الله
+            <br>
+            رقم البطاقة: 6392-5600-0105-8531
+            
+        </div>
+        
         {% if error_message %}
             <p> {{ error_message }} </p>
         {% endif %}

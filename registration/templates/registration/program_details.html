@@ -6,8 +6,8 @@
         <div class="col-md-5 gy-5">
           <img src="{% static '/img/enjoying.png' %}" class="img-fluid" alt="...">
         </div>
-        <div class="col gy-5">
-            <p>
+        <div class="col-md-7 gy-5 justify-content-center align-items-center">
+            <p class="">
                 سجل الآن لبرنامج {{program_name_arabic}}
             </p>
             <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">سجل الآن</a>
@@ -17,14 +17,18 @@
     <div class="row">
       <div class="col gy-5">
           <h1>
-            مميزات برامج كود_ سودان
+            مميزات النسخة الأساسية
           </h1>
           <br>
           <h4>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">كل برامجنا أونلاين فممكن تتابعنا من أي مكان و أي زمان</li>
               <li class="list-group-item">كل المدرسيين عندهم خبرة عملية في البرامج البدرسوها</li>
-              <li class="list-group-item">تطوير مستمر لي مقررات كل برنامج </li>
+              <li class="list-group-item">محاضرات لايف مع مدرسين سودانيين وذوي خبرة في مجال البرمجة.</li>
+              <li class="list-group-item">العمل على مشاريع صغيرة + مشروع تطبيق كامل.</li>
+              <li class="list-group-item">تسجيل لكل المحاضرات لتفادي سوء الإنترنت وانقطاع الكهرباء.</li>
+              <li class="list-group-item">شهادة إكمال البرنامج من كود_ سودان.</li>
+              <li class="list-group-item">مجتمع متفاعل ومحفز على التعلم.</li>
             </ul>
           </h4>
           <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">سجل الآن</a>
@@ -38,21 +42,33 @@
         {% endif %}
     </div>
 
-    <h1>
-      <u>
-        
-      </u>
-    </h1>
     <div class="row">
-      <div class="col-md-2 gy-5">
-        <img src="{% static '/img/enjoying.png' %}" class="img-fluid" alt="...">
-      </div>
+      <div class="col-md-6 gy-5">
+
+        {% if program_code == "ITP" %}
+        
+        {% elif program_code == "MDF" %}
+        
+        {% endif %}
+    </div>
       <div class="col gy-5">
-          <p>
-              سجل الآن لبرنامج {{program_name_arabic}}
-          </p>
+          <h1>
+            مميزات النسخة الذهبية
+          </h1>
+          <br>
+          <h4>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">كل مميزات النسخة الأساسية.</li>
+              <li class="list-group-item">تعلم استعمال أدوات جانبية مساعدة في البرمجة Discord + Google Calendar.</li>
+              <li class="list-group-item">تسجيل مجاني لأي كورس على منصة كود_ سودان التعليمية.</li>
+            </ul>
+          </h4>
           <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">سجل الآن</a>
       </div>
-  </div>
+      
+
 </div>
+
+<br>
+
 {% endblock %}

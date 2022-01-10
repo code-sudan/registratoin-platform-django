@@ -177,11 +177,18 @@ def program_registration(request):
             batch = new_registration.cleaned_data["batch"]
             try:
                 registrated = Registration.objects.create(student=request.user, program=program, package=package, batch=batch, is_register=True, is_enroll = False)
+                
             except:
                  return render(request, "registration/program_registration.html", {
                 "form": new_registration,
                 "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
+            if package=="basic":
+                print("the package is "+ package)
+                request.session["price"] = 10000
+            elif package=="golden":
+                print("the package is "+ package)
+                request.session["price"] = 15000
             request.session["form_id"] = registrated.id
             return render(request, f"registration/program_details.html", {
                 "package": package, 
@@ -215,19 +222,25 @@ def program_enrollment(request):
             return render(request, "registration/program_enrollment.html", {
                 "form": new_enrollment_from(),
                 "progress": 60,
+                "price": request.session.get("price"),
             })
         
     elif request.method == "POST":
         new_enrollment = new_enrollment_from(request.POST)
         if new_enrollment.is_valid():
-            transaction_id = new_enrollment.cleaned_data["transaction_id"]
-            try:
-                Registration.objects.filter(pk=request.session.get("form_id")).update(transaction_id = transaction_id, is_enroll = True)
-            except:
-                return render(request, "registration/program_enrollment.html", {
-                "form": new_enrollment
+            transaction_id = int(new_enrollment.cleaned_data["transaction_id"])
+            confirm_transaction = int(new_enrollment.cleaned_data["confirm_transaction"])
+            if transaction_id == confirm_transaction:
+                try:
+                    Registration.objects.filter(pk=request.session.get("form_id")).update(transaction_id = transaction_id, is_enroll = True)
+                    registration_form = Registration.objects.filter(pk=request.session.get("form_id"))
+                except:
+                    return render(request, "registration/program_enrollment.html", {
+                    "form": new_enrollment
+                    })
+                return render(request, "registration/successful.html", {
+                    "progress": 100,
                 })
-            return HttpResponse(f"you transaction id is {transaction_id}")
             
         else:
             return render(request, "registration/program_enrollment.html", {

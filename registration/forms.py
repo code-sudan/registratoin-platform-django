@@ -19,7 +19,7 @@ class register_login_form(ModelForm):
         }
         widgets={
             "username": forms.TextInput(attrs={"class": "form-control"}),
-            "password": forms.PasswordInput(attrs={"class": "form-control"})
+            "password": forms.PasswordInput(attrs={"class": "form-control", "type": "number", "min": "0", "max": "9", })
         }
         required={
             "username",
@@ -89,7 +89,7 @@ class new_program_form(ModelForm):
         ]
         widgets={
             "program": forms.Select(attrs={"class": "form-select"}),
-            "package": forms.Select(choices=PACKAGES, attrs={"class": "form-selecet"}),
+            "package": forms.Select(choices=PACKAGES, attrs={"class": "form-select"}),
             "batch": forms.Select(attrs={"class": "form-select"})
 
         }
@@ -101,15 +101,16 @@ class new_program_form(ModelForm):
 
 
 class new_enrollment_from(ModelForm):
+    confirm_transaction = forms.IntegerField(label="تأكيد رقم العملية", widget=forms.TextInput(attrs={"class": "form-control"}))
     class Meta:
         model=Registration
         fields = ["transaction_id"]
         labels = {
-            "transaction_id": "الرجاء إدخال رقم العملية:"
+            "transaction_id": "الرجاء إدخال رقم العملية:",
         }
 
         widgets = {
-            "transaction_id": forms.TextInput(attrs={"class": "form-contrl"})
+            "transaction_id": forms.TextInput(attrs={"class": "form-control", "type": "number"}),
         }
 
 
