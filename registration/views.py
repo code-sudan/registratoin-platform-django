@@ -183,8 +183,9 @@ def program_registration(request):
                 "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
             request.session["form_id"] = registrated.id
-            return render(request, f"registration/programs/{str(program.code).lower()}.html", {
+            return render(request, f"registration/program_details.html", {
                 "package": package, 
+                "program_code": str(program.code),
                 "program_name_arabic": str(program.name_arabic),
                 "program_name_english": str(program.name_english),
                 "track_name_arabic": str(program.track.name_arabic),
