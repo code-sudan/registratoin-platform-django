@@ -65,7 +65,7 @@ class student_details_from(ModelForm):
             "university": forms.TextInput(attrs={"class": "form-control", "required": True}), 
             "specialization": forms.TextInput(attrs={"class": "form-control", "required": True}), 
             "state": forms.TextInput(attrs={"class": "form-control", "required": True}), 
-            "address": forms.TextInput(attrs={"class": "form-select"}),
+            "address": forms.TextInput(attrs={"class": "form-control"}),
 
             
 
