@@ -65,7 +65,7 @@ def register_student(request):
         else:
             return render(request, "registration/register_student.html", {
             "form": register_login_form(),
-            "progress": 0,
+            "progress": 1,
             })
     # if the request == POST then check the information 
     elif request.method == "POST":
@@ -95,7 +95,7 @@ def register_student(request):
                 print(e)
                 return render(request, "registration/register_student.html", {
                     "form": new_student,
-                    "error_message": " رقم التلفون موجود بالفعل إذهب صفحة تسجيل الدخول"
+                    "error_message": " رقم التلفون موجود بالفعل إذهب لصفحة تسجيل الدخول"
                 })
             login(request, student)
             return HttpResponseRedirect(reverse("registration:index"))
