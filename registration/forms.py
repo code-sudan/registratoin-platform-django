@@ -19,7 +19,7 @@ class register_login_form(ModelForm):
         }
         widgets={
             "username": forms.TextInput(attrs={"class": "form-control"}),
-            "password": forms.PasswordInput(attrs={"class": "form-control", "type": "number", "min": "0", "max": "9", })
+            "password": forms.PasswordInput(attrs={"class": "form-control w-25 d-flex justify-content-center text-center", "type": "number", "min": "0", "max": "9", "size": "20",})
         }
         required={
             "username",
@@ -75,28 +75,19 @@ class student_details_from(ModelForm):
 class new_program_form(ModelForm):
     class Meta:
         model=Registration
-        fields = ["program", "package", "batch"]
+        fields = ["program",]
 
         labels = {
             "program": "ما هو البرنامج الذي تريد التسجيل فيه",
-            "package": "ما هي النسخة التي تريد التسجيل فيها؟",
-            "batch": "ما هي الدفعة التي تريد الانضمام لها؟"
         }
 
-        PACKAGES = [
-            ("basic", "الأساسية"),
-            ("golden", "الذهبية"),
-        ]
+    
         widgets={
             "program": forms.Select(attrs={"class": "form-select"}),
-            "package": forms.Select(choices=PACKAGES, attrs={"class": "form-select"}),
-            "batch": forms.Select(attrs={"class": "form-select"})
 
         }
         required = (
             "program",
-            "package",
-            "batch"
         )
 
 
@@ -104,14 +95,26 @@ class new_enrollment_from(ModelForm):
     confirm_transaction = forms.IntegerField(label="تأكيد رقم العملية", widget=forms.TextInput(attrs={"class": "form-control"}))
     class Meta:
         model=Registration
-        fields = ["transaction_id"]
+        fields = ["package", "transaction_id"]
         labels = {
             "transaction_id": "الرجاء إدخال رقم العملية:",
+            "package": "ما هي النسخة التي تريد التسجيل فيها؟",
         }
+
+        PACKAGES = [
+            ("basic", "الأساسية"),
+            ("golden", "الذهبية"),
+        ]
 
         widgets = {
             "transaction_id": forms.TextInput(attrs={"class": "form-control", "type": "number"}),
+            "package": forms.Select(choices=PACKAGES, attrs={"class": "form-select"}),
         }
+        
+        required = (
+            "package",
+            "transaction_id"
+        )
 
 
 

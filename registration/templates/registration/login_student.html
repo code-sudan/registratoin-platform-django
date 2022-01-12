@@ -1,19 +1,39 @@
 {% extends "registration/layout.html" %}
 
 {% block body %}
-    <div class="d-grid gap-3 me-5 mt-5 ms-5">
-        {% if error_message %}
-            <p> {{ error_message }} </p>
-        {% endif %}
-        <h1>تسجيل الدخول</h1>
-        <form action="{% url 'registration:login' %}" method='POST'>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
-            <br>
-            <a href="{% url 'registration:register_student' %}">التسجيل</a>
-
-        </form>
+<h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">تسجيل الدخول</h3>
+<form action="{% url 'registration:login' %}" method='POST'>
+    {% csrf_token %}
+    <div class="row">
+        <div class="md-6 mb-4 d-flex justify-content-center">
+            <div class="form-outline text-center">
+                <label class="form-label">{{ form.username.label }}</label>
+                <div>
+                    {{form.username}}
+                </div>
+                <div class="form-text">{{form.username.help_text}}</div>
+            </div>
+        </div>
     </div>
-{% endblock %}
 
+    <div class="row">
+        <div class="md-6 mb-4 d-flex justify-content-center">
+            <div class="form-outline text-center">
+                <label class="form-label">{{form.password.label}}</label>
+                <div class="text-center">
+                    {{form.password}}
+                </div>
+                <div class="form-text">{{form.password.help_text}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="md-6 mb-4 d-flex justify-content-center">
+            <div class="mt-4 pt-2">
+                <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

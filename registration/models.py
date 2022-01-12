@@ -21,6 +21,9 @@ class Student(AbstractUser):
     state = models.CharField(max_length=64 ,blank=True, null=True)
     address = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return(f"{self.first_name} {self.father_name}")
+
 
 
 class Track(models.Model):
@@ -54,8 +57,7 @@ class Batch(models.Model):
 class Registration(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     package = models.CharField(max_length=64)
     is_register = models.BooleanField(default=False)
@@ -63,4 +65,4 @@ class Registration(models.Model):
     is_enroll = models.BooleanField(default=False)
 
     def __str__(self):
-        return(f"{self.student} registerd for {self.program}")
+        return(f"{self.student.first_name} PN {self.student.username} registerd for {self.program}")

@@ -29,45 +29,47 @@ def login_view(request):
                     "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل"
                 })
             else:
-                student = authenticate(request, username=phone_number, password=pin)
+                student = authenticate(
+                    request, username=phone_number, password=pin)
                 if student is not None:
                     login(request, student)
                     return HttpResponseRedirect(reverse("registration:index"))
                 else:
                     return render(request, "registration/login_student.html", {
-                    "form": form,
-                    "error_message": "هذا الرقم غير مسجل، الرجاء التسجيل"
+                        "form": form,
+                        "error_message": "هذا الرقم غير مسجل، الرجاء التسجيل"
                     })
         else:
             return render(request, "registration/login_student.html", {
                 "form": form,
                 "error_message": "الرجاء المحاولة مرة أخرى"
-                })
+            })
+
 
 @login_required(redirect_field_name=None)
 def index(request):
     if not request.user.is_complete:
-        return HttpResponseRedirect(reverse("registration:student_details")) 
+        return HttpResponseRedirect(reverse("registration:student_details"))
     return HttpResponseRedirect(reverse("registration:program_registration"))
+
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("registration:login"))
 
+
 def register_student(request):
     # if the request == GET then display the new registration form
-    
+
     if request.method == "GET":
         if request.user.is_authenticated:
-            return render(request, "registration/register_student.html", {
-            "error_message": "أنت مسجل وأتممت عملية الدخول",
-            })
+            return HttpResponseRedirect(render("registration:index"))
         else:
             return render(request, "registration/register_student.html", {
-            "form": register_login_form(),
-            "progress": 1,
+                "form": register_login_form(),
+                "progress": 1,
             })
-    # if the request == POST then check the information 
+    # if the request == POST then check the information
     elif request.method == "POST":
         new_student = register_login_form(request.POST)
         if new_student.is_valid():
@@ -89,7 +91,8 @@ def register_student(request):
             phone_number = f"249{phone_number[-9:]}"
             # try to save the new students to the database
             try:
-                student = Student.objects.create_user(username=phone_number, password=pin, is_complete = False)
+                student = Student.objects.create_user(
+                    username=phone_number, password=pin, is_complete=False)
                 student.save()
             except Exception as e:
                 print(e)
@@ -101,15 +104,16 @@ def register_student(request):
             return HttpResponseRedirect(reverse("registration:index"))
         else:
             return render(request, "registration/register_student.html", {
-            "form": new_student,
+                "form": new_student,
             })
+
 
 @login_required(redirect_field_name=None)
 def student_details(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             student_details_form = student_details_from()
-            
+
             user_details = Student.objects.filter(pk=request.user.id)
 
             student_details_form.initial["first_name"] = user_details[0].first_name
@@ -147,20 +151,23 @@ def student_details(request):
             address = new_student_details.cleaned_data["address"]
 
             try:
-                Student.objects.filter(pk=request.user.pk).update(first_name = first_name, father_name=father_name, email=email, gender = gender, birthday=birthday, occupation=occupation, university=university, specialization=specialization, state=state, address=address)
-                Student.objects.filter(pk=request.user.pk).update(is_complete=True)
+                Student.objects.filter(pk=request.user.pk).update(first_name=first_name, father_name=father_name, email=email, gender=gender,
+                                                                  birthday=birthday, occupation=occupation, university=university, specialization=specialization, state=state, address=address)
+                Student.objects.filter(
+                    pk=request.user.pk).update(is_complete=True)
             except:
-                return render(request, "registration/student_details.html",{
-                "form": new_student_details,
-                "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
+                return render(request, "registration/student_details.html", {
+                    "form": new_student_details,
+                    "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
                 })
-            
+
             return HttpResponseRedirect(reverse("registration:program_registration"))
         else:
-            return render(request, "registration/student_details.html",{
+            return render(request, "registration/student_details.html", {
                 "form": new_student_details,
                 "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
             })
+
 
 @login_required(redirect_field_name=None)
 def program_registration(request):
@@ -173,31 +180,23 @@ def program_registration(request):
         new_registration = new_program_form(request.POST)
         if new_registration.is_valid():
             program = new_registration.cleaned_data["program"]
-            package = new_registration.cleaned_data["package"]
-            batch = new_registration.cleaned_data["batch"]
             try:
-                registrated = Registration.objects.create(student=request.user, program=program, package=package, batch=batch, is_register=True, is_enroll = False)
-                
-            except:
-                 return render(request, "registration/program_registration.html", {
-                "form": new_registration,
-                "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
+                registrated = Registration.objects.create(
+                    student=request.user, program=program, is_register=True, is_enroll=False)
+
+            except Exception as e:
+                print(e)
+                return render(request, "registration/program_registration.html", {
+                    "form": new_registration,
+                    "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
-            if package=="basic":
-                print("the package is "+ package)
-                request.session["price"] = 10000
-            elif package=="golden":
-                print("the package is "+ package)
-                request.session["price"] = 15000
             request.session["form_id"] = registrated.id
             return render(request, f"registration/program_details.html", {
-                "package": package, 
                 "program_code": str(program.code),
                 "program_name_arabic": str(program.name_arabic),
                 "program_name_english": str(program.name_english),
                 "track_name_arabic": str(program.track.name_arabic),
                 "track_name_english": str(program.track.name_english),
-                "batch": str(batch.started_at),
                 "progress": 40,
             })
 
@@ -207,11 +206,13 @@ def program_registration(request):
                 "error_message": "الرجاء المحاولة مرة أخرى"
             })
 
+
 @login_required(redirect_field_name=None)
 def program_enrollment(request):
     if request.method == "GET":
-        try: 
-            enrollment_form = Registration.objects.get(pk=request.session.get("form_id"))
+        try:
+            enrollment_form = Registration.objects.get(
+                pk=request.session.get("form_id"))
         except:
             return HttpResponseRedirect(reverse("registration:program_registration"))
         if enrollment_form.is_register == False:
@@ -222,28 +223,38 @@ def program_enrollment(request):
             return render(request, "registration/program_enrollment.html", {
                 "form": new_enrollment_from(),
                 "progress": 60,
-                "price": request.session.get("price"),
             })
-        
+
     elif request.method == "POST":
         new_enrollment = new_enrollment_from(request.POST)
         if new_enrollment.is_valid():
             transaction_id = int(new_enrollment.cleaned_data["transaction_id"])
-            confirm_transaction = int(new_enrollment.cleaned_data["confirm_transaction"])
+            confirm_transaction = int(
+                new_enrollment.cleaned_data["confirm_transaction"])
+            package = new_enrollment.cleaned_data["package"]
             if transaction_id == confirm_transaction:
                 try:
-                    Registration.objects.filter(pk=request.session.get("form_id")).update(transaction_id = transaction_id, is_enroll = True)
-                    registration_form = Registration.objects.filter(pk=request.session.get("form_id"))
+                    Registration.objects.filter(pk=request.session.get("form_id")).update(
+                        transaction_id=transaction_id, package=package, is_enroll=True)
+                    registration_form = Registration.objects.filter(
+                        pk=request.session.get("form_id"))
                 except:
                     return render(request, "registration/program_enrollment.html", {
-                    "form": new_enrollment
+                        "form": new_enrollment,
+                        "progress": 60
                     })
                 return render(request, "registration/successful.html", {
                     "progress": 100,
                 })
-            
+            else:
+                return render(request, "registration/program_enrollment.html", {
+                    "error_message": "رقم العملية لا يتطابق مع تأكيد رقم العملية",
+                    "form": new_enrollment,
+                    "progress": 60
+                })
         else:
             return render(request, "registration/program_enrollment.html", {
-            "form": new_enrollment
+                "form": new_enrollment
             })
-        
+
+# TODO: my registration, a list of all of the program I registered in
