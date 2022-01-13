@@ -65,4 +65,4 @@ class Registration(models.Model):
     is_enroll = models.BooleanField(default=False)
 
     def __str__(self):
-        return(f"{self.student.first_name} PN {self.student.username} registerd for {self.program}")
+        return(f"{self.student.first_name} PN {self.student.username} registerd for {self.program} is_enroll {self.is_enroll}")
