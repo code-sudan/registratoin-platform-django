@@ -8,13 +8,15 @@
             <th scope="col">النسخة</th>
             <th scope="col">أكملت التسجيل</th>
             <th scope="col">رقم العملية</th>
+            <th scope="col">حذف</th>
+
         </tr>
     </thead>
 
     {% for program in all_programs %}
     <tbody>
         <tr>
-            <th scope="row"><a href="{% url 'registration:program_enrollment' %}">{{program.program.name_arabic}}</a></th>
+            <th scope="row"><a href="{% url 'registration:edit_form' operation="edit" form_id=program.id %}">{{program.program.name_arabic}}</a></th>
             <td>{{program.package}}</td>
             <td>
                 {% if program.is_enroll %}
@@ -29,6 +31,11 @@
                 {% else %}
                 {{program.transaction_id}}
                 {% endif %}
+            </td>
+            <td>
+                <a class="btn btn-primary" href="{% url 'registration:edit_form' operation="delete" form_id=program.id %}">
+                    حذف
+                </a>
             </td>
         </tr>
     </tbody>

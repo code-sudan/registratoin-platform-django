@@ -217,12 +217,14 @@ def program_enrollment(request):
             return HttpResponseRedirect(reverse("registration:program_registration"))
         if enrollment_form.is_register == False:
             return HttpResponseRedirect(reverse("registration:program_registration"))
-        elif enrollment_form.is_enroll == True:
-            return HttpResponseRedirect(reverse("registration:index"))
         else:
+            old_enrollment_form = new_enrollment_from()
+            old_enrollment_form.initial["package"] = enrollment_form.package
+            old_enrollment_form.initial["transaction_id"] = enrollment_form.transaction_id
+            old_enrollment_form.initial["confirm_transaction"] = enrollment_form.transaction_id
             return render(request, "registration/program_enrollment.html", {
-                "form": new_enrollment_from(),
-                "progress": 60,
+                "form": old_enrollment_form,
+                "progress": 80
             })
 
     elif request.method == "POST":
@@ -264,7 +266,17 @@ def program_enrollment(request):
 @login_required(redirect_field_name=None)
 def my_programs(request):
     if request.method == "GET":
-        all_programs = Registration.objects.filter(student=request.user)
+        all_programs = Registration.objects.filter(student=request.user).order_by("-created_at")
         return render(request, "registration/my_programs.html", {
             "all_programs": all_programs,
         })
+
+
+@login_required(redirect_field_name=None)
+def edit_form(request, operation, form_id):
+    if operation == "edit":
+        request.session["form_id"] = form_id
+        return HttpResponseRedirect(reverse("registration:program_enrollment"))
+    elif operation == "delete":
+        Registration.objects.filter(pk=form_id).delete()
+        return HttpResponseRedirect(reverse("registration:my_programs"))
