@@ -15,7 +15,7 @@ class register_login_form(ModelForm):
         }
         help_texts={
             "username": "الرجاء إدخال رقم تلفونك المكون من 10 أرقام",
-            "password": "إختار رقم بين 0-9 لتسجيل الدخول بأمان في المستقبل"
+            "password": "إختار رقم واحد بين 0-9 لتسجيل الدخول بأمان في المستقبل"
         }
         widgets={
             "username": forms.TextInput(attrs={"class": "form-control"}),

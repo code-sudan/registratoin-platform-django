@@ -1,0 +1,37 @@
+{% extends "registration/layout.html" %}
+
+{% block body %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">إسم البرنامج</th>
+            <th scope="col">النسخة</th>
+            <th scope="col">أكملت التسجيل</th>
+            <th scope="col">رقم العملية</th>
+        </tr>
+    </thead>
+
+    {% for program in all_programs %}
+    <tbody>
+        <tr>
+            <th scope="row"><a href="{% url 'registration:program_enrollment' %}">{{program.program.name_arabic}}</a></th>
+            <td>{{program.package}}</td>
+            <td>
+                {% if program.is_enroll %}
+                <input class="form-check-input" type="checkbox" value="" checked disabled>
+                {% else %}
+                <input class="form-check-input disable" type="checkbox" value="" disabled>
+                {% endif %}
+            </td>
+            <td>
+                {% if not program.transaction_id%}
+                لا يوجد
+                {% else %}
+                {{program.transaction_id}}
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -258,3 +258,13 @@ def program_enrollment(request):
             })
 
 # TODO: my registration, a list of all of the program I registered in
+
+#Features
+
+@login_required(redirect_field_name=None)
+def my_programs(request):
+    if request.method == "GET":
+        all_programs = Registration.objects.filter(student=request.user)
+        return render(request, "registration/my_programs.html", {
+            "all_programs": all_programs,
+        })
