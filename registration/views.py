@@ -287,7 +287,7 @@ def edit_form(request, operation, form_id):
         Registration.objects.filter(pk=form_id).delete()
         return HttpResponseRedirect(reverse("registration:my_programs"))
 
-
+"""
 @login_required(redirect_field_name=None)
 def send_sms(request):
     
@@ -301,3 +301,4 @@ def send_sms(request):
         return HttpResponse(f"{sms.url} \n {sms.status_code} \n {request.user.username} \n {sms}")
     else:
         return HttpResponse("WTF")
+"""
