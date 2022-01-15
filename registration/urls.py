@@ -13,5 +13,5 @@ urlpatterns = [
     path("program_enrollment/", views.program_enrollment, name="program_enrollment"),
     path("my_programs/", views.my_programs, name="my_programs"),
     path("edit_form/<str:operation>/<int:form_id>", views.edit_form, name="edit_form"),
-
+    path("send_sms/", views.send_sms, name="send_sms"),
 ]

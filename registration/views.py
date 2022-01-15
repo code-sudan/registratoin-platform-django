@@ -7,8 +7,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Student, Registration
 from .forms import *
+import requests as req
 
 # Create your views here.
+
+API_KEY = "YWhtZWQuZWxzaXIua2hhbGZhbGxhQGdtYWlsLmNvbTpHOEJnaFhDemtq"
+SENDER_ID = "CodeSudan"
 
 
 def login_view(request):
@@ -45,7 +49,6 @@ def login_view(request):
                 "error_message": "الرجاء المحاولة مرة أخرى"
             })
 
-
 @login_required(redirect_field_name=None)
 def index(request):
     if not request.user.is_complete:
@@ -63,7 +66,7 @@ def register_student(request):
 
     if request.method == "GET":
         if request.user.is_authenticated:
-            return HttpResponseRedirect(render("registration:index"))
+            return HttpResponseRedirect(reverse("registration:index"))
         else:
             return render(request, "registration/register_student.html", {
                 "form": register_login_form(),
@@ -81,12 +84,14 @@ def register_student(request):
             if len(pin) != 1 or not pin.isnumeric():
                 return render(request, "registration/register_student.html", {
                     "form": new_student,
-                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل"
+                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل",
+                    "progress": 1,
                 })
             if len(phone_number) < 10 or len(pin) != 1 or not pin.isnumeric():
                 return render(request, "registration/register_student.html", {
                     "form": new_student,
-                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل"
+                    "error_message": "الرجاء إدخال معلومات صحيحة حسب وصف كل حقل",
+                    "progress": 1,
                 })
             phone_number = f"249{phone_number[-9:]}"
             # try to save the new students to the database
@@ -94,6 +99,7 @@ def register_student(request):
                 student = Student.objects.create_user(
                     username=phone_number, password=pin, is_complete=False)
                 student.save()
+                
             except Exception as e:
                 print(e)
                 return render(request, "registration/register_student.html", {
@@ -259,7 +265,7 @@ def program_enrollment(request):
                 "form": new_enrollment
             })
 
-# TODO: my registration, a list of all of the program I registered in
+# TODO: Sending the SMS to the customer
 
 #Features
 
@@ -280,3 +286,18 @@ def edit_form(request, operation, form_id):
     elif operation == "delete":
         Registration.objects.filter(pk=form_id).delete()
         return HttpResponseRedirect(reverse("registration:my_programs"))
+
+
+@login_required(redirect_field_name=None)
+def send_sms(request):
+    
+    sms_body = "MARWA"
+    payload = {'action': 'send-sms', 'api_key': API_KEY, 'to': "249921093899", 'from': SENDER_ID, 'sms': sms_body, 'unicode': 1}
+    sms = req.get("https://mazinhost.com/smsv1/sms/api", params=payload)
+    print(sms.status_code)
+    print(sms.text)
+    
+    if request.method == "GET":
+        return HttpResponse(f"{sms.url} \n {sms.status_code} \n {request.user.username} \n {sms}")
+    else:
+        return HttpResponse("WTF")

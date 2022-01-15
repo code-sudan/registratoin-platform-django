@@ -1,6 +1,7 @@
 {% extends "registration/layout.html" %}
 
 {% block body %}
+{% load static %} 
 
     <div class="d-grid gap-3 me-5 mt-5 ms-5">
         <div class="alert alert-primary" role="alert">
@@ -18,12 +19,20 @@
             <p> {{ error_message }} </p>
         {% endif %}
         <h1>إكمال التسجيل لبرامج كود_ سودان</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <img src="{% static '/img/bank2.jpg' %}" class="img-fluid" alt="...">
+                </div>
+                <div class="col-6">
+                    <img src="{% static '/img/bank3.jpg' %}" class="img-fluid" alt="...">
+                </div>
+            </div>
+        </div>
         <form action="{% url 'registration:program_enrollment' %}" method='POST'>
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">إكمال التسجيل</button>
         </form>
     </div>
-
-    <!-- TODO: Adding the google form for feedback --> 
 {% endblock %}
