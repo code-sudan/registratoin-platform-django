@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Student, Registration
 from .forms import *
-import requests as req
+# import requests as req
 
 # Create your views here.
 
