@@ -1,3 +1,10 @@
+#TODO: Localization to english and then Sudanese Arabic
+#TODO: security for phone number and transaction ID
+
+
+
+
+
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
@@ -237,10 +244,9 @@ def program_enrollment(request):
         new_enrollment = new_enrollment_from(request.POST)
         if new_enrollment.is_valid():
             transaction_id = int(new_enrollment.cleaned_data["transaction_id"])
-            confirm_transaction = int(
-                new_enrollment.cleaned_data["confirm_transaction"])
+            confirm_transaction = int(new_enrollment.cleaned_data["confirm_transaction"])
             package = new_enrollment.cleaned_data["package"]
-            if transaction_id == confirm_transaction:
+            if transaction_id == confirm_transaction and transaction_id > 100000:
                 try:
                     Registration.objects.filter(pk=request.session.get("form_id")).update(
                         transaction_id=transaction_id, package=package, is_enroll=True)
@@ -256,7 +262,7 @@ def program_enrollment(request):
                 })
             else:
                 return render(request, "registration/program_enrollment.html", {
-                    "error_message": "رقم العملية لا يتطابق مع تأكيد رقم العملية",
+                    "error_message": "هنالك مشكلة في رقم العملية الذي أدخلته",
                     "form": new_enrollment,
                     "progress": 60
                 })
@@ -272,7 +278,7 @@ def program_enrollment(request):
 @login_required(redirect_field_name=None)
 def my_programs(request):
     if request.method == "GET":
-        all_programs = Registration.objects.filter(student=request.user).order_by("-created_at")
+        all_programs = Registration.objects.filter(student=request.user, is_enroll=False).order_by("-created_at")
         return render(request, "registration/my_programs.html", {
             "all_programs": all_programs,
         })
@@ -286,6 +292,8 @@ def edit_form(request, operation, form_id):
     elif operation == "delete":
         Registration.objects.filter(pk=form_id).delete()
         return HttpResponseRedirect(reverse("registration:my_programs"))
+
+
 
 """
 @login_required(redirect_field_name=None)

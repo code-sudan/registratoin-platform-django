@@ -116,6 +116,30 @@ class new_enrollment_from(ModelForm):
             "transaction_id"
         )
 
+class first_lec_free_from(ModelForm):
+    confirm_transaction = forms.IntegerField(label="تأكيد رقم العملية", widget=forms.TextInput(attrs={"class": "form-control"}))
+    class Meta:
+        model=Registration
+        fields = ["package", "transaction_id"]
+        labels = {
+            "transaction_id": "الرجاء إدخال رقم العملية:",
+            "package": "ما هي النسخة التي تريد التسجيل فيها؟",
+        }
+
+        PACKAGES = [
+            ("basic", "الأساسية"),
+            ("golden", "الذهبية"),
+        ]
+
+        widgets = {
+            "transaction_id": forms.TextInput(attrs={"class": "form-control", "type": "number"}),
+            "package": forms.Select(choices=PACKAGES, attrs={"class": "form-select"}),
+        }
+        
+        required = (
+            "package",
+            "transaction_id"
+        )
 
 
 
