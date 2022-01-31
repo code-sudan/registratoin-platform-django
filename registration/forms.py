@@ -116,6 +116,7 @@ class new_enrollment_from(ModelForm):
             "transaction_id"
         )
 
+
 class first_lec_free_from(ModelForm):
     confirm_transaction = forms.IntegerField(label="تأكيد رقم العملية", widget=forms.TextInput(attrs={"class": "form-control"}))
     class Meta:

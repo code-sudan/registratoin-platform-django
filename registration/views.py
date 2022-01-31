@@ -60,6 +60,8 @@ def login_view(request):
 def index(request):
     if not request.user.is_complete:
         return HttpResponseRedirect(reverse("registration:student_details"))
+
+    request.session["programs_count"] = Registration.objects.filter(student=request.user, is_enroll=False).count()
     return HttpResponseRedirect(reverse("registration:program_registration"))
 
 
@@ -204,6 +206,7 @@ def program_registration(request):
                     "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
             request.session["form_id"] = registrated.id
+            request.session["programs_count"] = Registration.objects.filter(student=request.user, is_enroll=False).count()
             return render(request, f"registration/program_details.html", {
                 "program_code": str(program.code),
                 "program_name_arabic": str(program.name_arabic),
@@ -212,7 +215,6 @@ def program_registration(request):
                 "track_name_english": str(program.track.name_english),
                 "progress": 40,
             })
-
         else:
             return render(request, "registration/program_registration.html", {
                 "form": new_registration,
@@ -291,6 +293,7 @@ def edit_form(request, operation, form_id):
         return HttpResponseRedirect(reverse("registration:program_enrollment"))
     elif operation == "delete":
         Registration.objects.filter(pk=form_id).delete()
+        request.session["programs_count"] = Registration.objects.filter(student=request.user, is_enroll=False).count()
         return HttpResponseRedirect(reverse("registration:my_programs"))
 
 
