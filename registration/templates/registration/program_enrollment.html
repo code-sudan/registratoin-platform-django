@@ -1,38 +1,75 @@
 {% extends "registration/layout.html" %}
 
 {% block body %}
-{% load static %} 
+{% load static %}
 
-    <div class="d-grid gap-3 me-5 mt-5 ms-5">
-        <div class="alert alert-primary" role="alert">
-            يمكنك الآن دفع الرسوم على حسب النسخة التي قمت بإختيارها 10,000 جنيه للنسخة الأساسية و 15,000 للنسخة الذهبية على حساب بنكك:
-            <br>
-            رقم الحساب: 1626615
-            <br>
-            الإسم: أحمد السر خلف الله
-            <br>
-            أو رقم البطاقة: 6392-5600-0105-8531
-            
+<div class="d-grid gap-3 me-5 mt-5 ms-5">
+    <div class="alert alert-primary" role="alert">
+        يمكنك الآن دفع الرسوم على حسب النسخة التي قمت بإختيارها 10,000 جنيه للنسخة الأساسية و 15,000 للنسخة الذهبية على
+        حساب بنكك:
+        <br>
+        رقم الحساب: 1626615
+        <br>
+        الإسم: أحمد السر خلف الله
+        <br>
+        أو رقم البطاقة: 6392-5600-0105-8531
+
+    </div>
+
+    {% if error_message %}
+    <p> {{ error_message }} </p>
+    {% endif %}
+    <h1>إكمال التسجيل لبرامج كود_ سودان</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <img src="{% static '/img/bank2.jpg' %}" class="img-fluid" alt="...">
+            </div>
+            <div class="col-6">
+                <img src="{% static '/img/bank3.jpg' %}" class="img-fluid" alt="...">
+            </div>
         </div>
-        
-        {% if error_message %}
-            <p> {{ error_message }} </p>
-        {% endif %}
-        <h1>إكمال التسجيل لبرامج كود_ سودان</h1>
-        <div class="container">
-            <div class="row">
-                <div class="col-6">
-                    <img src="{% static '/img/bank2.jpg' %}" class="img-fluid" alt="...">
-                </div>
-                <div class="col-6">
-                    <img src="{% static '/img/bank3.jpg' %}" class="img-fluid" alt="...">
+    </div>
+    <form action="{% url 'registration:program_enrollment' %}" method='POST'>
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="md-6 mb-4 d-flex justify-content-center">
+                <div class="form-outline text-center">
+                    <label class="form-label">{{form.package.label}}</label>
+                    {{form.package}}
+                    <div class="form-text">{{form.package.help_text}}</div>
                 </div>
             </div>
         </div>
-        <form action="{% url 'registration:program_enrollment' %}" method='POST'>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">إكمال التسجيل</button>
-        </form>
-    </div>
+
+        <div class="row">
+            <div class="md-6 mb-4 d-flex justify-content-center">
+                <div class="form-outline text-center">
+                    <label class="form-label">{{form.transaction_id.label}}</label>
+                    {{form.transaction_id}}
+                    <div class="form-text">{{form.transaction_id.help_text}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="md-6 mb-4 d-flex justify-content-center">
+                <div class="form-outline text-center">
+                    <label class="form-label">{{form.confirm_transaction.label}}</label>
+                    {{form.confirm_transaction}}
+                    <div class="form-text">{{form.confirm_transaction.help_text}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="md-6 mb-4 d-flex justify-content-center">
+                <div class="mt-4 pt-2">
+                    <button type="submit" class="btn btn-primary">إكمال التسجيل</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
