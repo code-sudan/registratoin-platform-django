@@ -1,7 +1,12 @@
 {% extends "registration/layout.html" %}
 
 {% block body %}
-<h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">تسجيل الدخول</h3>
+{% load static %} 
+
+
+<h3 class="mb-4 pb-2 pb-md-0 text-center">
+    <img src="{% static '/img/logo.png' %}" alt="" width="250">
+</h3>
 <form action="{% url 'registration:login' %}" method='POST'>
     {% csrf_token %}
     <div class="row">
@@ -20,8 +25,9 @@
         <div class="md-6 mb-4 d-flex justify-content-center">
             <div class="form-outline text-center">
                 <label class="form-label">{{form.password.label}}</label>
-                <div class="text-center">
-                    {{form.password}}
+                <div class="text-center" >
+                    <center>{{form.password}}</center>
+                    
                 </div>
                 <div class="form-text">{{form.password.help_text}}</div>
             </div>

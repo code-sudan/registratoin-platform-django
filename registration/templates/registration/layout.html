@@ -12,76 +12,78 @@
 </head>
 
 <body class="bg-secondary">
-  <div class="container-lg">
-
-
+  <div class="container">
     <section>
       <div class="container py-5 h-5">
         <div class="row justify-content-center align-items-center h-100">
 
-            <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-              <div class="card-body p-4 p-md-5">
-                <div>
-                  {% if user.is_authenticated %} أنت مسجل كـ:
-                  <strong>{{ user.first_name }}</strong>. {% else %} غير مسجل {% endif %}
-                </div>
-                <br>
-                <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
-                  <div class="">
-                    <ul class="navbar-nav">
-                      {% if user.is_authenticated %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:index' %}">الرئيسية</a>
-                      </li>
-                      {% if user.is_complete %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:student_details' %}">تعديل بياناتي</a>
-                      </li>
-                      {% endif %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:my_programs' %}">برامجي 
-                          
-                          {% if request.session.programs_count %}
-                          <span class="badge bg-secondary">{{request.session.programs_count}}</span>
-                          {% endif %}
-                            
-                          
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:logout' %}">تسجيل الخروج</a>
-                      </li>
-                      {% else %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:login' %}">تسجيل الدخول</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registration:register_student' %}">التسجيل</a>
-                      </li>
-                      {% endif %}
-                    </ul>
-                  </div>
-                </nav>
-
-                <br />
-                {% if progress %}
-                <div class="progress">
-                  <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{progress}}%" aria-valuenow="25"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <br>
-                {% endif %}
-
-                <div class="row"></div>
-                {% if error_message %}
-                <div class="alert alert-danger text-center" role="alert">
-                  {{error_message}}
-                </div>
-              </div>
-              {% endif %}
+          <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+            <div class="card-body p-4 p-md-5">
               <div>
-                {% block body %} {% endblock %}
+                {% if user.is_authenticated %} مرحبا
+                <strong>{{ user.first_name }}</strong> في عائلة كود_ سودان{% else %} غير مسجل {% endif %}
               </div>
+              <br>
+              <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
+                <div class="container-fluid">
+
+                  <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration:index' %}">الرئيسية</a>
+                    </li>
+                    {% if user.is_complete %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration:student_details' %}">تعديل بياناتي</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration:my_programs' %}">برامجي
+
+                        {% if request.session.programs_count %}
+                        <span class="badge bg-secondary">{{request.session.programs_count}}</span>
+                        {% endif %}
+
+
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration:logout' %}">تسجيل الخروج</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration:login' %}">تسجيل الدخول</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'registration:register_student' %}">التسجيل</a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                  <a class="navbar-brand" href="{% url 'registration:index' %}">
+                    <img src="{% static '/img/logo.png' %}" alt="" width="100">
+                  </a>
+                </div>
+              </nav>
+
+              <br />
+              {% if progress %}
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{progress}}%"
+                  aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <br>
+              {% endif %}
+
+              <div class="row"></div>
+              {% if error_message %}
+              <div class="alert alert-danger text-center" role="alert">
+                {{error_message}}
+              </div>
+            </div>
+            {% endif %}
+            <div>
+              {% block body %} {% endblock %}
+            </div>
           </div>
         </div>
       </div>

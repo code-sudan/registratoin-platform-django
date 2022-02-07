@@ -19,7 +19,7 @@ class register_login_form(ModelForm):
         }
         widgets={
             "username": forms.TextInput(attrs={"class": "form-control"}),
-            "password": forms.PasswordInput(attrs={"class": "form-control w-25 d-flex justify-content-center text-center", "type": "number", "min": "0", "max": "9", "size": "20",})
+            "password": forms.PasswordInput(attrs={"class": "form-control w-25 d-flex", "type": "number", "min": "0", "max": "9", "size": "20",})
         }
         required={
             "username",

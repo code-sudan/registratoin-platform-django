@@ -1,22 +1,23 @@
 {% extends "registration/layout.html" %}
 {% block body %}
-{% load static %} 
-<div class="container px-4">
-    <div class="row">
-        <div class="col-md-5 gy-5">
-          <img src="{% static '/img/enjoying.png' %}" class="img-fluid" alt="...">
-        </div>
-        <div class="col-md-7 gy-5 justify-content-center align-items-center">
-            <p class="">
-                سجل الآن لبرنامج {{program_name_arabic}}
-            </p>
-            <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">سجل الآن</a>
-        </div>
-    </div>
+{% load static %}
 
+<div class="px-3 py-3 pt-md-5 pb-md-5 mx-auto text-center">
+  <p class="h1 mb-3">{{program_name_arabic}}</p>
+  <p class="lead">
+    مرحبا بك في كود_ سودان، ونتمنى لك رحلة تعليمة متميزة، رؤية كود_ سودان هي جعل السودان مركز تكنلوجي في أفريقيا، كل
+    برامجنا عملية بحيث تقوم ببناء 3 مشاريع على الأقل، و مبنية على إحتياج السوق بحيث تتوفر لك أفضل الفرص لدخول سوق العمل
+    مباشرة بعد نهاية <mark>برنامج {{program_name_arabic}}</mark>
+  </p>
+  <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">سجل
+    الآن</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-6">
     <div class="card text-center mb-5">
       <div class="card-header">
-        مميزات برامج كود_ سودان
+        <h5 class="my-1 font-weight-normal">مميزات برامج كود_ سودان</h5>
       </div>
       <div class="card-body">
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -37,93 +38,69 @@
               <img src="{% static '/img/features/5.jpg' %}" class="d-block w-100" alt="...">
             </div>
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">السابق</span>
           </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">التالي</span>
           </button>
         </div>
       </div>
-
     </div>
-
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">النسخة الأساسية</h5>
-            <p class="card-text">رسوم النسخة الأساسية <b>10,000</b> جنيه</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">النسخة الذهبية</h5>
-            <p class="card-text">رسوم النسخة الذهبية <b>15,000</b> جنيه</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col gy-5">
-          <h1>
-            مميزات النسخة الأساسية - 10,000 جنيه
-          </h1>
-          <br>
-          <h4>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">كل برامجنا أونلاين فممكن تتابعنا من أي مكان و أي زمان</li>
-              <li class="list-group-item">كل المدرسيين عندهم خبرة عملية في البرامج البدرسوها</li>
-              <li class="list-group-item">محاضرات لايف مع مدرسين سودانيين وذوي خبرة في مجال البرمجة.</li>
-              <li class="list-group-item">العمل على مشاريع صغيرة + مشروع تطبيق كامل.</li>
-              <li class="list-group-item">تسجيل لكل المحاضرات لتفادي سوء الإنترنت وانقطاع الكهرباء.</li>
-              <li class="list-group-item">شهادة إكمال البرنامج من كود_ سودان.</li>
-              <li class="list-group-item">مجتمع متفاعل ومحفز على التعلم.</li>
-            </ul>
-          </h4>
-      </div>
-      <div class="col-md-6 gy-5">
-
-      
-
-        {% if program_code == "ITP" %}
-        <img src="{% static '/img/itp_curriculum.jpg' %}" class="img-fluid" alt="...">
-        {% elif program_code == "MDF" %}
-        <img src="{% static '/img/mdf_curriculum.png' %}" class="img-fluid" alt="...">
-        {% endif %}
-    </div>
-
-    <div class="row">
-      <div class="col-md-6 gy-5">
-
-        {% if program_code == "ITP" %}
-        
-        {% elif program_code == "MDF" %}
-        
-        {% endif %}
-    </div>
-      <div class="col gy-5">
-          <h1>
-            مميزات النسخة الذهبية - 15,000 جنيه
-          </h1>
-          <br>
-          <h4>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">كل مميزات النسخة الأساسية.</li>
-              <li class="list-group-item">تعلم استعمال أدوات جانبية مساعدة في البرمجة Discord + Google Calendar.</li>
-              <li class="list-group-item">تسجيل مجاني لأي كورس على منصة كود_ سودان التعليمية.</li>
-            </ul>
-          </h4>
-      </div>
-      
-
+  </div>
 </div>
 
-<br>
+
+<div class="row mb-5">
+  <div class="col-sm-6">
+    <div class="card-deck mb-3 text-center">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">النسخة الذهبية</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title">15,000 جنيه <small class="text-muted">/ شهر</small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>كل مميزات النسخة الأساسية</li>
+            <li>وصول مجاني و مدى الحياة لمكتبة كود_ سودان</li>
+            <li>تسجيل مجاني لأي كورس على منصة كود_ سودان التعليمية.</li>
+          </ul>
+          <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">قم
+            بالتسجيل الآن</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-sm-6">
+    <div class="card-deck mb-3 text-center">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">النسخة الأساسية</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title">10,000 جنيه <small class="text-muted">/ شهر</small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>مجتمع متفاعل ومحفز على التعلم</li>
+            <li>شهادة إكمال البرنامج من كود_ سودان</li>
+            <li>كل برامجنا أونلاين فممكن تتابعنا من أي مكان و أي زمان</li>
+            <li>كل المدرسيين عندهم خبرة عملية في البرامج البدرسوها</li>
+            <li>العمل على مشاريع صغيرة + مشروع تطبيق كامل</li>
+            <li>تسجيل لكل المحاضرات لتفادي سوء الإنترنت وانقطاع الكهرباء</li>
+          </ul>
+          <a class="btn btn-outline-primary btn-lg" href="{% url 'registration:program_enrollment' %}" role="button">قم
+            بالتسجيل الآن</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
 
 {% endblock %}
