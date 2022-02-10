@@ -14,4 +14,5 @@ urlpatterns = [
     path("my_programs/", views.my_programs, name="my_programs"),
     path("edit_form/<str:operation>/<int:form_id>", views.edit_form, name="edit_form"),
     path("send_sms/", views.send_sms_view, name="send_sms_view"),
+    path("registrations_list/", views.registrations_list, name="registrations_list"),
 ]

@@ -1,0 +1,37 @@
+{% extends "registration/layout.html" %}
+
+{% block body %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">program</th>
+            <th scope="col">created_at</th>
+            <th scope="col">is_enroll</th>
+            <th scope="col">transaction_id</th>
+            <th scope="col">Whatsapp</th>
+
+        </tr>
+    </thead>
+
+    {% for item in all_registrations %}
+    <tbody>
+        <tr>
+            <th scope="row">{{item.student.first_name}} {{item.student.father_name}}</th>
+            <td>{{item.program.name_arabic}}</td>
+            <td>{{item.created_at}}</td>
+            <td>
+                {% if item.is_enroll %}
+                <input class="form-check-input" type="checkbox" value="" checked disabled>
+                {% else %}
+                <input class="form-check-input disable" type="checkbox" value="" disabled>
+                {% endif %}
+            </td>
+            <td>{{item.transaction_id}}</td>
+            <td><a href="http://api.whatsapp.com/send?phone={{item.student.username}}">{{item.student.username}}</a></td>
+            
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% endblock %}

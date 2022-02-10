@@ -2,6 +2,7 @@
 # TODO: security for phone number and transaction ID
 
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
@@ -321,3 +322,12 @@ def send_sms_view(request):
     send_sms("249921093899", sms_to_send="details_completed", name="احمد")
     
     return HttpResponse("Hwlloe")
+
+
+@staff_member_required
+def registrations_list(request):
+    if request.method == "GET":
+        all_registrations = Registration.objects.all().order_by("-created_at")
+        return render(request, "registration/registrations_list.html", {
+            "all_registrations": all_registrations,
+        })
