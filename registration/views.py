@@ -1,8 +1,5 @@
-#TODO: Localization to english and then Sudanese Arabic
-#TODO: security for phone number and transaction ID
-
-
-
+# TODO: Localization to english and then Sudanese Arabic
+# TODO: security for phone number and transaction ID
 
 
 from django.shortcuts import render
@@ -12,14 +9,14 @@ from django.http import HttpResponse, HttpResponseRedirect, request
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
+
 from .models import Student, Registration
 from .forms import *
+from .sms import send_sms
 # import requests as req
 
 # Create your views here.
-
-API_KEY = "YWhtZWQuZWxzaXIua2hhbGZhbGxhQGdtYWlsLmNvbTpHOEJnaFhDemtq"
-SENDER_ID = "CodeSudan"
 
 
 def login_view(request):
@@ -56,12 +53,14 @@ def login_view(request):
                 "error_message": "الرجاء المحاولة مرة أخرى"
             })
 
+
 @login_required(redirect_field_name=None)
 def index(request):
     if not request.user.is_complete:
         return HttpResponseRedirect(reverse("registration:student_details"))
 
-    request.session["programs_count"] = Registration.objects.filter(student=request.user, is_enroll=False).count()
+    request.session["programs_count"] = Registration.objects.filter(
+        student=request.user, is_enroll=False).count()
     return HttpResponseRedirect(reverse("registration:program_registration"))
 
 
@@ -108,7 +107,7 @@ def register_student(request):
                 student = Student.objects.create_user(
                     username=phone_number, password=pin, is_complete=False)
                 student.save()
-                
+
             except Exception as e:
                 print(e)
                 return render(request, "registration/register_student.html", {
@@ -116,6 +115,10 @@ def register_student(request):
                     "error_message": " رقم التلفون موجود بالفعل إذهب لصفحة تسجيل الدخول"
                 })
             login(request, student)
+
+            # Send the SMS to the customers when registered
+            send_sms(phone_number=phone_number, sms_to_send="registration_sms")
+
             return HttpResponseRedirect(reverse("registration:index"))
         else:
             return render(request, "registration/register_student.html", {
@@ -168,14 +171,15 @@ def student_details(request):
             try:
                 Student.objects.filter(pk=request.user.pk).update(first_name=first_name, father_name=father_name, email=email, gender=gender,
                                                                   birthday=birthday, occupation=occupation, university=university, specialization=specialization, state=state, address=address)
-                Student.objects.filter(
-                    pk=request.user.pk).update(is_complete=True)
+                Student.objects.filter(pk=request.user.pk).update(is_complete=True)
             except:
                 return render(request, "registration/student_details.html", {
                     "form": new_student_details,
                     "error_message": "للأسف واجهتنا مشكلة أثناء حفظ بياناتك الرجاء المحاولة مرة أخرى",
                 })
 
+            # sending the SMS when recieving the data
+            # send_sms(phone_number=request.user.username, sms_to_send="details_completed", name=first_name)
             return HttpResponseRedirect(reverse("registration:program_registration"))
         else:
             return render(request, "registration/student_details.html", {
@@ -205,8 +209,14 @@ def program_registration(request):
                     "form": new_registration,
                     "error_message": "هنالك مشكلة في البيانات التي قمت بإدخالها"
                 })
+            
+            # send an SMS when the person registered for a program
+            send_sms(request.user.username, sms_to_send="program_registration_sms", program=program.name_arabic)
+
+
             request.session["form_id"] = registrated.id
-            request.session["programs_count"] = Registration.objects.filter(student=request.user, is_enroll=False).count()
+            request.session["programs_count"] = Registration.objects.filter(
+                student=request.user, is_enroll=False).count()
             return render(request, f"registration/program_details.html", {
                 "program_code": str(program.code),
                 "program_name_arabic": str(program.name_arabic),
@@ -246,7 +256,8 @@ def program_enrollment(request):
         new_enrollment = new_enrollment_from(request.POST)
         if new_enrollment.is_valid():
             transaction_id = int(new_enrollment.cleaned_data["transaction_id"])
-            confirm_transaction = int(new_enrollment.cleaned_data["confirm_transaction"])
+            confirm_transaction = int(
+                new_enrollment.cleaned_data["confirm_transaction"])
             package = new_enrollment.cleaned_data["package"]
             if transaction_id == confirm_transaction and transaction_id > 100000:
                 try:
@@ -259,6 +270,10 @@ def program_enrollment(request):
                         "form": new_enrollment,
                         "progress": 60
                     })
+
+                #send and SMS after enrollment
+                send_sms(request.user.username, sms_to_send="program_enrollment_sms", program=registration_form[0].program.name_arabic)
+
                 return render(request, "registration/successful.html", {
                     "progress": 100,
                 })
@@ -275,12 +290,14 @@ def program_enrollment(request):
 
 # TODO: Sending the SMS to the customer
 
-#Features
+# Features
+
 
 @login_required(redirect_field_name=None)
 def my_programs(request):
     if request.method == "GET":
-        all_programs = Registration.objects.filter(student=request.user, is_enroll=False).order_by("-created_at")
+        all_programs = Registration.objects.filter(
+            student=request.user, is_enroll=False).order_by("-created_at")
         return render(request, "registration/my_programs.html", {
             "all_programs": all_programs,
         })
@@ -293,23 +310,14 @@ def edit_form(request, operation, form_id):
         return HttpResponseRedirect(reverse("registration:program_enrollment"))
     elif operation == "delete":
         Registration.objects.filter(pk=form_id).delete()
-        request.session["programs_count"] = Registration.objects.filter(student=request.user, is_enroll=False).count()
+        request.session["programs_count"] = Registration.objects.filter(
+            student=request.user, is_enroll=False).count()
         return HttpResponseRedirect(reverse("registration:my_programs"))
 
 
-
-"""
 @login_required(redirect_field_name=None)
-def send_sms(request):
+def send_sms_view(request):
     
-    sms_body = "MARWA"
-    payload = {'action': 'send-sms', 'api_key': API_KEY, 'to': "249921093899", 'from': SENDER_ID, 'sms': sms_body, 'unicode': 1}
-    sms = req.get("https://mazinhost.com/smsv1/sms/api", params=payload)
-    print(sms.status_code)
-    print(sms.text)
+    send_sms("249921093899", sms_to_send="details_completed", name="احمد")
     
-    if request.method == "GET":
-        return HttpResponse(f"{sms.url} \n {sms.status_code} \n {request.user.username} \n {sms}")
-    else:
-        return HttpResponse("WTF")
-"""
+    return HttpResponse("Hwlloe")
