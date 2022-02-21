@@ -13,7 +13,7 @@ def full_name(obj):
     return(f"{obj.first_name} {obj.father_name}")
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('username', full_name, 'email', 'university', 'is_complete')
-
+ 
 
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Track)
