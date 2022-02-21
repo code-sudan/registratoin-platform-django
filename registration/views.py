@@ -117,8 +117,9 @@ def register_student(request):
                 })
             login(request, student)
 
+            # We're not sending SMS to the customer upon registration because there are some user who didn't finished their details, so we don't know 
             # Send the SMS to the customers when registered
-            send_sms(phone_number=phone_number, sms_to_send="registration_sms")
+            # send_sms(phone_number=phone_number, sms_to_send="registration_sms")
 
             return HttpResponseRedirect(reverse("registration:index"))
         else:

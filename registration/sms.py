@@ -11,7 +11,7 @@ def send_sms(phone_number, sms_to_send, name = None, program = None):
     if sms_to_send == "registration_sms":
         sms_to_encode = "مرحبا بك في عائلة كود_ سودان، نتمنى لك رحلة تعليمية ممتعة مع برامجنا الأونلاين"
     elif sms_to_send == "details_completed" and name != None:
-        sms_to_encode = f"شكرا {name}، تم حفظ بياناتك بأمان"
+        sms_to_encode = f"مرحبا {name} في عائلة كود_ سودان، نتمنى لك رحلة تعليمية ممتعة مع برامجنا الأونلاين، تم حفظ بياناتك."
     elif sms_to_send == "program_registration_sms" and program != None:
         sms_to_encode = f"أنت في طريقك للتسجيل لبرنامج {program} قم بدفع رسوم البرنامج لحفظ مقعدك"
     elif sms_to_send == "program_enrollment_sms" and program != None:
