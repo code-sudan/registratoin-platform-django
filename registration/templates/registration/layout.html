@@ -84,6 +84,21 @@
             <div>
               {% block body %} {% endblock %}
             </div>
+            {% if quote %}
+            <footer class="bg-light text-center">
+                  <figure class="text-center p-3">
+                    <blockquote class="blockquote">
+                      <p>{{quote.quote}}</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer p-2">
+                      {{quote.by}}
+                    </figcaption>
+                  </figure>
+            </footer>
+            
+            {% endif %}
+            
+
           </div>
         </div>
       </div>

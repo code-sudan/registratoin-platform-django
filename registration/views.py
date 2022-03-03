@@ -11,8 +11,10 @@ from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from random import randint
 
-from .models import Student, Registration
+
+from .models import CodeSudanQuote, Student, Registration
 from .forms import *
 from .sms import send_sms
 # import requests as req
@@ -22,9 +24,12 @@ from .sms import send_sms
 
 def login_view(request):
     if request.method == "GET":
+        count = CodeSudanQuote.objects.count()
+        quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
         return render(request, "registration/login_student.html", {
             "form": register_login_form(),
             "progress": 0,
+            "quote": quote,
         })
     elif request.method == "POST":
         form = register_login_form(request.POST)
@@ -77,9 +82,12 @@ def register_student(request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse("registration:index"))
         else:
+            count = CodeSudanQuote.objects.count()
+            quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
             return render(request, "registration/register_student.html", {
                 "form": register_login_form(),
                 "progress": 1,
+                "quote": quote,
             })
     # if the request == POST then check the information
     elif request.method == "POST":
@@ -193,9 +201,12 @@ def student_details(request):
 @login_required(redirect_field_name=None)
 def program_registration(request):
     if request.method == "GET":
+        count = CodeSudanQuote.objects.count()
+        quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
         return render(request, "registration/program_registration.html", {
             "form": new_program_form(),
             "progress": 40,
+            "quote": quote,
         })
     elif request.method == "POST":
         new_registration = new_program_form(request.POST)
@@ -249,9 +260,14 @@ def program_enrollment(request):
             old_enrollment_form.initial["package"] = enrollment_form.package
             old_enrollment_form.initial["transaction_id"] = enrollment_form.transaction_id
             old_enrollment_form.initial["confirm_transaction"] = enrollment_form.transaction_id
+
+            count = CodeSudanQuote.objects.count()
+            quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+
             return render(request, "registration/program_enrollment.html", {
                 "form": old_enrollment_form,
-                "progress": 80
+                "progress": 80,
+                "quote": quote,
             })
 
     elif request.method == "POST":
@@ -290,7 +306,6 @@ def program_enrollment(request):
                 "form": new_enrollment
             })
 
-# TODO: Sending the SMS to the customer
 
 # Features
 

@@ -20,4 +20,4 @@ admin.site.register(Track)
 admin.site.register(Program)
 admin.site.register(Registration, RegistrationAdmin)
 admin.site.register(Batch)
-
+admin.site.register(CodeSudanQuote)
