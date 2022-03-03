@@ -30,6 +30,28 @@ class register_login_form(ModelForm):
 class student_details_from(ModelForm):
     class Meta:
         model=Student
+
+        SUDAN_STATES = [
+            ("Outside Sudan", "خارج السودان"),
+            ("Khartoum", "الخرطوم"),
+            ("North Kordofan", "شمال كردفان"),
+            ("Northern", "الشمالية"),
+            ("Kassala", "كسّلا"),
+            ("Blue Nile", "النيل الأزرق"),
+            ("North Darfur", "شمال دارفور"),
+            ("South Darfur", "جنوب دارفور"),
+            ("South Kordofan", "جنوب كردفان"),
+            ("Al Jazirah", "الجزيرة"),
+            ("White Nile", "النيل الأبيض"),
+            ("River Nile", "نهر النيل"),
+            ("Red Sea", "البحر الأحمر"),
+            ("Al Qadarif", "القضارف"),
+            ("Sennar", "سنّار"),
+            ("West Darfur", "غرب دارفور"),
+            ("Central Darfur", "وسط دارفور"),
+            ("East Darfur", "شرق دارفور"),
+            ("East Darfur", "غرب كردفان"),
+            ]
         fields=["first_name", "father_name", "email", "gender", "birthday", "occupation", "university", "specialization", "state", "address"]
         labels = {
             "first_name": "إسمك",
@@ -64,7 +86,7 @@ class student_details_from(ModelForm):
             "occupation": forms.TextInput(attrs={"class": "form-control", "required": True}),
             "university": forms.TextInput(attrs={"class": "form-control", "required": True}), 
             "specialization": forms.TextInput(attrs={"class": "form-control", "required": True}), 
-            "state": forms.TextInput(attrs={"class": "form-control", "required": True}), 
+            "state": forms.Select(choices=SUDAN_STATES, attrs={"class": "form-select"}), 
             "address": forms.TextInput(attrs={"class": "form-control"}),
 
             
