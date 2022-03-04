@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import django_heroku
 from django.urls import reverse
 
 import os
@@ -134,7 +133,3 @@ AUTH_USER_MODEL = 'registration.Student'
 LOGIN_URL = '/login/'  #Define your login page url..
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())

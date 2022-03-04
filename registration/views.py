@@ -23,6 +23,9 @@ from .sms import send_sms
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("registration:index"))
+
     if request.method == "GET":
         count = CodeSudanQuote.objects.count()
         quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
@@ -201,8 +204,11 @@ def student_details(request):
 @login_required(redirect_field_name=None)
 def program_registration(request):
     if request.method == "GET":
+        
         count = CodeSudanQuote.objects.count()
         quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+
+
         return render(request, "registration/program_registration.html", {
             "form": new_program_form(),
             "progress": 40,
