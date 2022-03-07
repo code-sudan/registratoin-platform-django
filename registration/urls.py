@@ -15,4 +15,5 @@ urlpatterns = [
     path("edit_form/<str:operation>/<int:form_id>", views.edit_form, name="edit_form"),
     path("send_sms/", views.send_sms_view, name="send_sms_view"),
     path("registrations_list/", views.registrations_list, name="registrations_list"),
+    path("download_registration_csv/", views.download_registration_csv, name="download_registration_csv"),
 ]

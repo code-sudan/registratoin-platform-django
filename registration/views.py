@@ -2,6 +2,7 @@
 # TODO: security for phone number and transaction ID
 
 
+from urllib import response
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.urls import reverse
@@ -17,6 +18,7 @@ from random import randint
 from .models import CodeSudanQuote, Student, Registration
 from .forms import *
 from .sms import send_sms
+from .utils import *
 # import requests as req
 
 # Create your views here.
@@ -353,3 +355,10 @@ def registrations_list(request):
         return render(request, "registration/registrations_list.html", {
             "all_registrations": all_registrations,
         })
+
+
+@staff_member_required
+def download_registration_csv(request):
+    data = download_csv(request, Registration.objects.all())
+    response = HttpResponse(data, content_type='text/csv; charset=utf-8-sig')
+    return response
