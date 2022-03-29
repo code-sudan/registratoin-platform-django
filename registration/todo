@@ -1,0 +1,5 @@
+1. Handle the error when there isn't any track or program
+2. Handle the error when there isn't any quote
+3. add the batches with time
+4. add the program outlines
+5. improve the UI using JS
