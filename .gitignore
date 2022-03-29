@@ -8,8 +8,8 @@
 *.pyc
 __pycache__/
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
+
+
 media
 *todo
 
@@ -60,6 +60,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+private_config/
 htmlcov/
 .tox/
 .nox/
