@@ -12,8 +12,6 @@ from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from random import randint
-
 
 from .models import CodeSudanQuote, Student, Registration
 from .forms import *
@@ -29,8 +27,8 @@ def login_view(request):
             return HttpResponseRedirect(reverse("registration:index"))
 
     if request.method == "GET":
-        count = CodeSudanQuote.objects.count()
-        quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+        quote = get_quote()
+
         return render(request, "registration/login_student.html", {
             "form": register_login_form(),
             "progress": 0,
@@ -87,8 +85,7 @@ def register_student(request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse("registration:index"))
         else:
-            count = CodeSudanQuote.objects.count()
-            quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+            quote = get_quote()
             return render(request, "registration/register_student.html", {
                 "form": register_login_form(),
                 "progress": 1,
@@ -207,8 +204,7 @@ def student_details(request):
 def program_registration(request):
     if request.method == "GET":
         
-        count = CodeSudanQuote.objects.count()
-        quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+        quote = get_quote()
 
 
         return render(request, "registration/program_registration.html", {
@@ -269,8 +265,8 @@ def program_enrollment(request):
             old_enrollment_form.initial["transaction_id"] = enrollment_form.transaction_id
             old_enrollment_form.initial["confirm_transaction"] = enrollment_form.transaction_id
 
-            count = CodeSudanQuote.objects.count()
-            quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+            #get the quotation using get_quote function from the utils file
+            quote = get_quote()
 
             return render(request, "registration/program_enrollment.html", {
                 "form": old_enrollment_form,

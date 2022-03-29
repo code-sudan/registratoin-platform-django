@@ -2,7 +2,13 @@ from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 import csv
 
+
+#for get_quote function
+from .models import *
+from random import randint
+
 def download_csv(request, queryset):
+
   if not request.user.is_staff:
     raise PermissionDenied
 
@@ -32,3 +38,13 @@ def download_csv(request, queryset):
           values.append(value)
       writer.writerow(values)
   return response
+
+
+def get_quote():
+    try: 
+        count = CodeSudanQuote.objects.count()
+        quote = CodeSudanQuote.objects.all()[randint(0, count -1)]
+    except Exception as e:
+        print(e)
+        return None
+    return 1
