@@ -1,7 +1,7 @@
 #!/bin/sh     
 source ./venv/bin/activate
 sudo git pull origin master
-sudo pip3 install -r requirements.txt
+cat requirements.txt | xargs -n 1 pip install
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic
